@@ -22,6 +22,8 @@
 // ***This may not be needed***
 
 // organizeTask function (sends task object to appropriate arrays)
+// NOTE: Something to consider is that when a new day comes along, certain task objects will need to be automatically
+//       placed into either the today array, or the late array.
 
 // editTask function (receives data from user form, then calls task set methods to change the appropriate properties)
 
