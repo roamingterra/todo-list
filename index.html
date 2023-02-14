@@ -7,6 +7,306 @@
     <title>Todo List</title>
   </head>
   <body>
-    <script src="./main.js"></script>
+    <!-- <script src="./main.js"></script> -->
+    <!-- Start representing the dashboard in hard coded html-->
+    <div id="container">
+      <div id="top-bar">
+        <div class="left">
+          <img
+            id="top-bar-icon"
+            class="grow"
+            src="./images-temp/tally-mark-3.png"
+            alt="side bar icon"
+          />
+          <img
+            id="top-bar-icon"
+            class="grow"
+            src="./images-temp/sun-hollow.svg"
+            alt="light mode dark mode icon"
+          />
+        </div>
+        <div class="right">
+          <div class="info">
+            <img
+              id="top-bar-icon"
+              src="./images-temp/info-dark.png"
+              alt="info icon"
+            />
+            <div class="info-container">
+              This is a todo list application that allows you to record tasks,
+              keep track of them, and complete them. Create a task category,
+              fill it with tasks, and keep track of them through the task
+              category tab, or through the today and late tabs. <br /><br />
+              This website was created by Daniel Ballerini, with help from the
+              Odin Project
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="side-bar">
+        <div>
+          <div class="today grow-2">
+            <img
+              id="side-bar-icon"
+              src="./images-temp/today.png"
+              alt="today option icon"
+            />
+            <div>Today</div>
+          </div>
+          <div class="late grow-2">
+            <img
+              id="side-bar-icon"
+              src="./images-temp/late.png"
+              alt="late option icon"
+            />
+            <div>Late</div>
+          </div>
+        </div>
+        <div class="task-categories">
+          <div class="task-categories-header">
+            <div>Task Categories</div>
+            <button class="add-task-category">
+              <img
+                id="side-bar-icon"
+                class="grow"
+                src="./images-temp/plus.svg"
+                alt="add task category icon"
+              />
+            </button>
+          </div>
+          <div class="new-task-categories">
+            <div class="task-category grow-2">
+              <img
+                class="task-category-icon"
+                src="./images-temp/circle-dark.svg"
+                alt="task category icon"
+              />
+              <div>General</div>
+            </div>
+            <div class="task-category grow-2">
+              <img
+                class="task-category-icon"
+                src="./images-temp/circle-dark.svg"
+                alt="task category icon"
+              />
+              <div>Social</div>
+            </div>
+            <div class="task-category grow-2">
+              <img
+                class="task-category-icon"
+                src="./images-temp/circle-dark.svg"
+                alt="task category icon"
+              />
+              <div>School</div>
+            </div>
+            <div class="task-category grow-2">
+              <img
+                class="task-category-icon"
+                src="./images-temp/circle-dark.svg"
+                alt="task category icon"
+              />
+              <div>Work</div>
+            </div>
+            <div class="task-category grow-2">
+              <img
+                class="task-category-icon"
+                src="./images-temp/circle-dark.svg"
+                alt="task category icon"
+              />
+              <div>Health</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="main-content"></div>
+    </div>
   </body>
+  <style>
+    @font-face {
+      font-family: roboto-black;
+      src: url(./fonts-temp/Roboto-Medium.ttf);
+    }
+
+    .grow {
+      transition: all 0.2s ease-in-out;
+    }
+
+    .grow:hover {
+      transform: scale(1.5);
+    }
+
+    .grow-2 {
+      transition: all 0.1s ease-in-out;
+    }
+
+    .grow-2:hover {
+      transform: scale(1.2);
+    }
+
+    html,
+    body {
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      font-family: "roboto-black";
+    }
+
+    #container {
+      display: grid;
+      grid-template-rows: 84px 1fr;
+      grid-template-columns: 250px 1fr;
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+
+    #top-bar {
+      grid-column: 1 / 3;
+      grid-row: 1 / 2;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+      height: fit-content;
+      z-index: 2;
+      box-shadow: 0 4px 2px rgba(0, 0, 0, 0.16);
+    }
+
+    .left {
+      display: flex;
+      gap: 20px;
+    }
+
+    #top-bar-icon {
+      width: 2.5rem;
+      cursor: pointer;
+    }
+
+    .info {
+      width: 40px;
+      height: 40px;
+    }
+
+    .info .info-container {
+      visibility: hidden;
+      position: absolute;
+      top: 105px;
+      right: 20px;
+      background-color: black;
+      color: white;
+      width: 400px;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: justify;
+      line-height: 25px;
+      font-size: 1.25rem;
+    }
+
+    .info:hover .info-container {
+      visibility: visible;
+    }
+
+    #side-bar {
+      grid-column: 1 / 2;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+      font-size: 1.25rem;
+    }
+
+    #side-bar-icon {
+      width: 2.5rem;
+    }
+
+    .today,
+    .late,
+    .task-categories-header {
+      display: flex;
+      align-items: center;
+    }
+
+    .today,
+    .late {
+      cursor: pointer;
+      gap: 5px;
+    }
+
+    .today div:nth-child(2),
+    .late div:nth-child(2) {
+      display: block;
+    }
+
+    .task-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-categories-header {
+      justify-content: space-between;
+    }
+
+    .task-categories-header div:first-child {
+      display: block;
+      white-space: nowrap;
+    }
+
+    button.add-task-category {
+      border: 0;
+      padding: 0;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    .task-category-icon {
+      width: 1rem;
+    }
+
+    .new-task-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-left: 5px;
+    }
+
+    .task-category {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .task-category-icon {
+      padding: 5px;
+    }
+
+    .task-category div:nth-child(2) {
+      display: block;
+    }
+
+    #main-content {
+      background-color: #f0eef1;
+    }
+
+    /*side-bar slides in to the left*/
+    @media screen and (max-width: 800px) {
+      #container {
+        grid-template-columns: 80px 1fr;
+      }
+
+      .today div:nth-child(2),
+      .late div:nth-child(2) {
+        display: none;
+      }
+
+      .task-categories-header div:first-child {
+        display: none;
+      }
+
+      .task-category div:nth-child(2) {
+        display: none;
+      }
+    }
+  </style>
 </html>
