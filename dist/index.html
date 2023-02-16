@@ -7,11 +7,10 @@
     <title>Todo List</title>
   </head>
   <body>
-    <!-- <script src="./main.js"></script> -->
     <!-- Start representing the dashboard in hard coded html-->
     <div id="container">
-      <div id="top-bar">
-        <div class="left">
+      <!-- <div id="top-bar">
+        <div class="top-bar-left">
           <img
             class="side-bar-icon grow"
             src="./images-temp/tally-mark-3.png"
@@ -23,7 +22,7 @@
             alt="light mode dark mode icon"
           />
         </div>
-        <div class="right">
+        <div class="top-bar-right">
           <div class="info">
             <img
               class="info-icon"
@@ -72,6 +71,7 @@
             </button>
           </div>
           <div class="new-task-categories">
+            
             <div class="task-category grow-2">
               <img
                 class="task-category-icon"
@@ -115,10 +115,11 @@
           </div>
         </div>
       </div>
-      <div id="main-content"></div>
+      <div id="main-content"></div> -->
     </div>
+    <script src="./main.js"></script>
   </body>
-  <style>
+  <!-- <style>
     @font-face {
       font-family: roboto-black;
       src: url(./fonts-temp/Roboto-Medium.ttf);
@@ -171,7 +172,7 @@
       box-shadow: 0 4px 2px rgba(0, 0, 0, 0.16);
     }
 
-    .left {
+    .top-bar-left {
       display: flex;
       gap: 20px;
     }
@@ -318,8 +319,9 @@
         width: 0;
       }
     }
-  </style>
-  <script>
+  </style> -->
+
+  <!-- <script>
     const container = document.querySelector("#container");
     const mainContentPriority = document.querySelector(
       "#container > #main-content"
@@ -381,5 +383,5 @@
         taskCategories.style.width = "0";
       }
     });
-  </script>
+  </script> -->
 </html>
