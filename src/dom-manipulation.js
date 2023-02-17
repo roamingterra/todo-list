@@ -138,40 +138,54 @@ function dashboard() {
   taskCategoryTxtContainer.appendChild(TaskCategoryTxt);
   container.appendChild(mainContent);
 
-  // Page event listeners
-
   const mainContentPriority = document.querySelector(
     "#container > #main-content"
   ); // This variable exists to override the styling of the mainContent
+}
 
-  let positionWidthLast = document.body.offsetWidth; // This variable is used to keep track of the window increasing or decreasing for the resize event listener
+// Window resize sidebar function that retracts and expands the side bar depending on window size
+function windowResizeSideBar(windowResizeDirection) {
+  const sideBar = document.querySelector("#side-bar");
+  const mainContentPriority = document.querySelector(
+    "#container > #main-content"
+  );
+  const mainContent = document.querySelector("#main-content");
+  const todayLate = document.querySelector(".today-late");
+  const taskCategories = document.querySelector(".task-categories");
 
-  window.addEventListener("resize", () => {
-    let positionWidthDifference = document.body.offsetWidth - positionWidthLast;
-    positionWidthLast = document.body.offsetWidth;
-    if (
-      document.body.offsetWidth < 800 &&
-      positionWidthDifference < 0 &&
-      sideBar.offsetWidth === 290
-    ) {
-      console.log("works negative");
-      mainContent.style.gridColumn = "1 / 3";
-      sideBar.style.width = "0";
-      sideBar.style.padding = "0";
-      todayLate.style.width = "0";
-      taskCategories.style.width = "0";
-    }
-    if (document.body.offsetWidth > 800 && positionWidthDifference > 0) {
-      console.log("works positive");
-      mainContentPriority.style.gridColumn = "2 / 3";
-      sideBar.style.width = "250px";
-      sideBar.style.padding = "20px";
-      todayLate.style.width = "250px";
-      taskCategories.style.width = "250px";
-    }
-  });
+  if (
+    document.body.offsetWidth < 800 &&
+    windowResizeDirection < 0 &&
+    sideBar.offsetWidth === 290
+  ) {
+    console.log("works negative");
+    mainContent.style.gridColumn = "1 / 3";
+    sideBar.style.width = "0";
+    sideBar.style.padding = "0";
+    todayLate.style.width = "0";
+    taskCategories.style.width = "0";
+  }
+  if (document.body.offsetWidth > 800 && windowResizeDirection > 0) {
+    console.log("works positive");
+    mainContentPriority.style.gridColumn = "2 / 3";
+    sideBar.style.width = "250px";
+    sideBar.style.padding = "20px";
+    todayLate.style.width = "250px";
+    taskCategories.style.width = "250px";
+  }
+}
 
-  sideBarIcon.addEventListener("click", () => {
+// Button sidebar function that retracts and expands the side bar when the button is pressed
+function buttonSideBar(event) {
+  const sideBar = document.querySelector("#side-bar");
+  const mainContentPriority = document.querySelector(
+    "#container > #main-content"
+  );
+  const mainContent = document.querySelector("#main-content");
+  const todayLate = document.querySelector(".today-late");
+  const taskCategories = document.querySelector(".task-categories");
+
+  if (event.target.matches(".side-bar-icon")) {
     if (sideBar.offsetWidth === 0) {
       if (document.body.offsetWidth > 800) {
         mainContentPriority.style.gridColumn = "2 / 3";
@@ -188,9 +202,8 @@ function dashboard() {
       todayLate.style.width = "0";
       taskCategories.style.width = "0";
     }
-  });
+  }
 }
-
 // today function (for loading the today tab which contains all tasks that are due today)
 // declare elements
 // add attributes
@@ -206,4 +219,4 @@ function dashboard() {
 // add attributes
 // append elements to dom
 
-export { dashboard };
+export { dashboard, windowResizeSideBar, buttonSideBar };

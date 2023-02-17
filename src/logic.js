@@ -28,3 +28,26 @@
 // editTask function (receives data from user form, then calls task set methods to change the appropriate properties)
 
 // changeTheme function (changes UI to dark mode or light mode )
+
+// getDirectionOfWindowResize module (scope of this module is to determine the difference in width of window from when the user begins changing its size, in order to determine whether it is shrinking or growing)
+const getDirectionOfWindowResize = (() => {
+  let positionWidthLast;
+  let newPosition;
+  let positionWidthDifference;
+
+  const setPositionWidthLast = (screenWidth) =>
+    (positionWidthLast = screenWidth);
+  const setNewPosition = (screenWidth) => (newPosition = screenWidth);
+  const setPositionWidthDifference = () =>
+    (positionWidthDifference = newPosition - positionWidthLast);
+  const getPositionWidthDifference = () => positionWidthDifference;
+
+  return {
+    setPositionWidthLast,
+    setNewPosition,
+    setPositionWidthDifference,
+    getPositionWidthDifference,
+  };
+})();
+
+export { getDirectionOfWindowResize };
