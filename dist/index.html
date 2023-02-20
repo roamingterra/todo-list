@@ -9,7 +9,7 @@
   <body>
     <!-- Start representing the dashboard in hard coded html-->
     <div id="container">
-      <!-- <div id="top-bar">
+      <div id="top-bar" class="is-blurred">
         <div class="top-bar-left">
           <img
             class="side-bar-icon grow"
@@ -40,7 +40,7 @@
           </div>
         </div>
       </div>
-      <div id="side-bar">
+      <div id="side-bar" class="is-blurred">
         <div class="today-late">
           <div class="today grow-2">
             <img
@@ -71,7 +71,6 @@
             </button>
           </div>
           <div class="new-task-categories">
-            
             <div class="task-category grow-2">
               <img
                 class="task-category-icon"
@@ -115,14 +114,187 @@
           </div>
         </div>
       </div>
-      <div id="main-content"></div> -->
+      <div id="main-content" class="is-blurred"></div>
     </div>
-    <script src="./main.js"></script>
+    <!-- form -->
+    <div id="overlay">
+      <div id="form-container">
+        <div class="remove-options">
+          <div class="delete">
+            <img
+              id="delete"
+              src="./images-temp/trash-can-dark.svg"
+              alt="delete icon"
+            />
+          </div>
+          <div class="close">
+            <img
+              id="close"
+              src="./images-temp/close-dark.svg"
+              alt="close form window icon"
+            />
+          </div>
+        </div>
+        <form action="./index.html" method="post" id="form">
+          <div class="form-column-1">
+            <!-- Task title (top left) -->
+            <div class="task-title">
+              <label for="task-title">TASK TITLE</label>
+              <input type="text" id="task-title" required maxlength="30" />
+            </div>
+            <!-- Description (bottom left) -->
+            <div class="description">
+              <label for="description">DESCRIPTION</label>
+              <textarea
+                name="description"
+                id="description"
+                cols="28"
+                rows="6"
+                form="form"
+              ></textarea>
+            </div>
+          </div>
+          <!-- Rest of options (right) -->
+          <div class="form-column-2">
+            <div class="column-2-option">
+              <label for="task-categories-selection">TASK CATEGORY:</label>
+              <select id="task-categories-selection" name="task-categories">
+                <!-- This drop-down menu will be filled with task categories that have been added by user -->
+                <!-- <option value="general">General</option> -->
+              </select>
+            </div>
+            <div class="column-2-option">
+              <label for="due-date-selection">DUE DATE:</label>
+              <input
+                type="date"
+                id="due-date-selection"
+                name="due-date-selection"
+              />
+            </div>
+            <div class="column-2-option">
+              <label for="priority">PRIORITY:</label>
+              <select id="priority" name="priority">
+                <option value="priority-1">Priority 1</option>
+                <option value="priority-2">Priority 2</option>
+                <option value="priority-3">Priority 3</option>
+                <option value="priority-4">Priority 4</option>
+              </select>
+            </div>
+          </div>
+        </form>
+        <!-- Submit -->
+        <button type="submit" id="submit" form="form">SUBMIT</button>
+      </div>
+    </div>
+    <!-- <script src="./main.js"></script> -->
   </body>
-  <!-- <style>
+  <style>
     @font-face {
       font-family: roboto-black;
       src: url(./fonts-temp/Roboto-Medium.ttf);
+    }
+
+    /* Form */
+
+    .is-blurred {
+      filter: blur(5px);
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.649);
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #form-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px;
+      width: 420px;
+      height: 300px;
+      z-index: 3;
+      border-radius: 20px;
+      background-color: #f0eef1;
+      backdrop-filter: blur(15px);
+    }
+
+    .remove-options {
+      display: flex;
+      justify-content: end;
+      gap: 10px;
+    }
+
+    #delete,
+    #close {
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+    }
+
+    form {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+    }
+
+    .form-column-1 {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    textarea {
+      resize: none;
+      font-family: "roboto-black";
+      font-size: 1rem;
+    }
+
+    .task-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .description {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-column-2 {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .column-2-option {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #submit {
+      border-radius: 50px;
+      padding: 10px;
+      font-family: "roboto-black";
+      font-size: 1rem;
+      background-color: white;
+      color: #171717;
+      border: 0;
+    }
+    #submit:hover {
+      background-color: rgb(195, 195, 195);
+      color: white;
+    }
+
+    #submit:active {
+      background-color: white;
+      color: rgb(195, 195, 195);
     }
 
     /* Hover animations */
@@ -170,6 +342,7 @@
       height: fit-content;
       z-index: 2;
       box-shadow: 0 4px 2px rgba(0, 0, 0, 0.16);
+      background-color: white;
     }
 
     .top-bar-left {
@@ -319,9 +492,9 @@
         width: 0;
       }
     }
-  </style> -->
+  </style>
 
-  <!-- <script>
+  <script>
     const container = document.querySelector("#container");
     const mainContentPriority = document.querySelector(
       "#container > #main-content"
@@ -383,5 +556,5 @@
         taskCategories.style.width = "0";
       }
     });
-  </script> -->
+  </script>
 </html>

@@ -204,6 +204,11 @@ function buttonSideBar(event) {
     }
   }
 }
+// Modal window function
+// declare elements
+// add attributes
+// append elements to dom (sibling of #main-content element)
+
 // today function (for loading the today tab which contains all tasks that are due today)
 // declare elements
 // add attributes
