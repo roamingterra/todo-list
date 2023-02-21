@@ -71,121 +71,21 @@
             </button>
           </div>
           <div class="new-task-categories">
-            <div class="task-category grow-2">
+            <!-- <div class="task-category grow-2">
               <img
                 class="task-category-icon"
                 src="./images-temp/circle-dark.svg"
                 alt="task category icon"
               />
               <div>General</div>
-            </div>
-            <div class="task-category grow-2">
-              <img
-                class="task-category-icon"
-                src="./images-temp/circle-dark.svg"
-                alt="task category icon"
-              />
-              <div>Social</div>
-            </div>
-            <div class="task-category grow-2">
-              <img
-                class="task-category-icon"
-                src="./images-temp/circle-dark.svg"
-                alt="task category icon"
-              />
-              <div>School</div>
-            </div>
-            <div class="task-category grow-2">
-              <img
-                class="task-category-icon"
-                src="./images-temp/circle-dark.svg"
-                alt="task category icon"
-              />
-              <div>Work</div>
-            </div>
-            <div class="task-category grow-2">
-              <img
-                class="task-category-icon"
-                src="./images-temp/circle-dark.svg"
-                alt="task category icon"
-              />
-              <div>Health</div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
       <div id="main-content" class="is-blurred"></div>
     </div>
     <!-- form -->
-    <div id="overlay">
-      <div id="form-container">
-        <div class="remove-options">
-          <div class="delete">
-            <img
-              id="delete"
-              src="./images-temp/trash-can-dark.svg"
-              alt="delete icon"
-            />
-          </div>
-          <div class="close">
-            <img
-              id="close"
-              src="./images-temp/close-dark.svg"
-              alt="close form window icon"
-            />
-          </div>
-        </div>
-        <form action="./index.html" method="post" id="form">
-          <div class="form-column-1">
-            <!-- Task title (top left) -->
-            <div class="task-title">
-              <label for="task-title">TASK TITLE</label>
-              <input type="text" id="task-title" required maxlength="30" />
-            </div>
-            <!-- Description (bottom left) -->
-            <div class="description">
-              <label for="description">DESCRIPTION</label>
-              <textarea
-                name="description"
-                id="description"
-                cols="28"
-                rows="6"
-                form="form"
-              ></textarea>
-            </div>
-          </div>
-          <!-- Rest of options (right) -->
-          <div class="form-column-2">
-            <div class="column-2-option">
-              <label for="task-categories-selection">TASK CATEGORY:</label>
-              <select id="task-categories-selection" name="task-categories">
-                <!-- This drop-down menu will be filled with task categories that have been added by user -->
-                <!-- <option value="general">General</option> -->
-              </select>
-            </div>
-            <div class="column-2-option">
-              <label for="due-date-selection">DUE DATE:</label>
-              <input
-                type="date"
-                id="due-date-selection"
-                name="due-date-selection"
-              />
-            </div>
-            <div class="column-2-option">
-              <label for="priority">PRIORITY:</label>
-              <select id="priority" name="priority">
-                <option value="priority-1">Priority 1</option>
-                <option value="priority-2">Priority 2</option>
-                <option value="priority-3">Priority 3</option>
-                <option value="priority-4">Priority 4</option>
-              </select>
-            </div>
-          </div>
-        </form>
-        <!-- Submit -->
-        <button type="submit" id="submit" form="form">SUBMIT</button>
-      </div>
-    </div>
+
     <!-- <script src="./main.js"></script> -->
   </body>
   <style>
@@ -196,9 +96,9 @@
 
     /* Form */
 
-    .is-blurred {
+    /* .is-blurred {
       filter: blur(5px);
-    }
+    } */
 
     #overlay {
       position: fixed;
@@ -554,6 +454,86 @@
         sideBar.style.padding = "0";
         todayLate.style.width = "0";
         taskCategories.style.width = "0";
+      }
+    });
+
+    // Array that holds all task category objects
+    const taskCategoryLibrary = [];
+
+    // Task category factory function
+    function taskCategoryFactory(title, color) {
+      const tasksArray = [];
+
+      const getTitle = () => title;
+      const getColor = () => color;
+      const getTasks = () => tasksArray;
+      const setTitle = (newTitle) => (title = newTitle);
+      const setColor = (newColor) => (color = newColor);
+      const setTask = (newTask) => tasksArray.push(newTask);
+
+      return { getTitle, getColor, getTasks, setTitle, setColor, setTask };
+    }
+
+    // Create object for dummy task category then place in array
+    const dummyTaskCategory = taskCategoryFactory("General", "black");
+    taskCategoryLibrary.push(dummyTaskCategory);
+
+    // Logic function to check if there are five task category objects in array
+    function checkTaskCategoryLibraryFull() {
+      if (taskCategoryLibrary.length === 5) return true;
+      else return false;
+    }
+
+    // Display task categories function (dom-manipulation)
+    function displayTaskCategories() {
+      for (let i = 0; i < taskCategoryLibrary.length; i++) {
+        // declare elements
+        const newTaskCategories = document.querySelector(
+          ".new-task-categories"
+        );
+        const taskCategory = document.createElement("div");
+        const taskCategoryIcon = document.createElement("img");
+        const taskCategoryTxtContainer = document.createElement("div");
+        const TaskCategoryTxt = document.createTextNode("New category");
+
+        // add attributes
+        taskCategory.setAttribute("class", "task-category grow-2");
+        taskCategoryIcon.setAttribute("class", "task-category-icon");
+        taskCategoryIcon.setAttribute("src", "./images-temp/circle-dark.svg");
+        taskCategoryIcon.setAttribute("alt", "task category icon");
+
+        // append elements to dom
+        newTaskCategories.appendChild(taskCategory);
+        taskCategory.appendChild(taskCategoryIcon);
+        taskCategory.appendChild(taskCategoryTxtContainer);
+        taskCategoryTxtContainer.appendChild(TaskCategoryTxt);
+      }
+    }
+
+    // Clear task categories function (dom-manipulation)
+    function clearTaskCategories() {
+      const newTaskCategories = document.querySelector(".new-task-categories");
+      newTaskCategories.querySelectorAll("*").forEach((n) => n.remove());
+    }
+
+    // Add new task category function (logic)
+    function addNewTaskCategory() {
+      const dummyTaskCategory = taskCategoryFactory("New Category", "black");
+      taskCategoryLibrary.push(dummyTaskCategory);
+    }
+
+    // Display task categories
+    displayTaskCategories();
+
+    // Add task category event listener
+    const plusIcon = document.querySelector(".plus-icon");
+    plusIcon.addEventListener("click", () => {
+      console.log("Event listener works!");
+      if (!checkTaskCategoryLibraryFull()) {
+        console.log("Condition Works!");
+        addNewTaskCategory();
+        clearTaskCategories();
+        displayTaskCategories();
       }
     });
   </script>

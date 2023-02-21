@@ -1,6 +1,6 @@
 // taskCategory factory function (creates task category objects, which will contain tasks)
 // properties: title (received from user form), color (received from user form), array of tasks
-// methods: getTitle, getColor, setTitle, setColor
+// methods: getTitle, getColor, getTasks (get tasks from tasks array), setTitle, setColor, setTask (add task to tasks array),
 
 // task factory function (creates tasks that the user creates, which will be placed in a taskCategory)
 // properties: title (received from user form), description (received from user form),
