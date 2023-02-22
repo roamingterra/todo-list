@@ -1,6 +1,25 @@
 // taskCategory factory function (creates task category objects, which will contain tasks)
 // properties: title (received from user form), color (received from user form), array of tasks
 // methods: getTitle, getColor, getTasks (get tasks from tasks array), setTitle, setColor, setTask (add task to tasks array),
+function taskCategoryFactory(title, color) {
+  const tasksArray = [];
+
+  const getTitle = () => title;
+  const getColor = () => color;
+  const getTasks = () => tasksArray;
+  const setTitle = (newTitle) => (title = newTitle);
+  const setColor = (newColor) => (color = newColor);
+  const setTask = (newTask) => tasksArray.push(newTask);
+
+  return {
+    getTitle,
+    getColor,
+    getTasks,
+    setTitle,
+    setColor,
+    setTask,
+  };
+}
 
 // task factory function (creates tasks that the user creates, which will be placed in a taskCategory)
 // properties: title (received from user form), description (received from user form),
@@ -8,6 +27,38 @@
 //             priority (received from user form)
 // methods: getTitle, getDescription, getCategory, getDueDate, getPriority
 //          setTitle, setDescription, setCategory, setDueDate, setPriority
+
+// Array that holds all task category objects
+const taskCategoryLibrary = [];
+
+// Function to check if there are five task category objects in array
+function checkTaskCategoryLibraryFull() {
+  if (taskCategoryLibrary.length === 5) return true;
+  else return false;
+}
+
+// Edit task category name function
+function editTaskCategoryName(event) {
+  taskCategoryLibrary[event.target.classList[1]].setTitle(
+    event.target.textContent
+  );
+}
+
+// Edit task category icon color function
+function editTaskCategoryIconColor(event) {
+  taskCategoryLibrary[event.target.classList[1]].setColor(event.target.value);
+}
+
+// Remove task category function
+function removeTaskCategory(event) {
+  taskCategoryLibrary.splice(event.target.classList[1], 1);
+}
+
+// Add new task category function
+function addNewTaskCategory() {
+  const dummyTaskCategory = taskCategoryFactory("Category", "#000000");
+  taskCategoryLibrary.push(dummyTaskCategory);
+}
 
 // today array (contains all task objects that have dueDate of todays date)
 
@@ -50,4 +101,13 @@ const getDirectionOfWindowResize = (() => {
   };
 })();
 
-export { getDirectionOfWindowResize };
+export {
+  taskCategoryFactory,
+  taskCategoryLibrary,
+  checkTaskCategoryLibraryFull,
+  editTaskCategoryName,
+  editTaskCategoryIconColor,
+  removeTaskCategory,
+  addNewTaskCategory,
+  getDirectionOfWindowResize,
+};

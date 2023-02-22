@@ -1,11 +1,12 @@
 // Imports
+import { taskCategoryLibrary } from "./logic";
 import tallyMark3 from "./images/tally-mark-3.png";
 import sunHollow from "./images/sun-hollow.svg";
 import infoDark from "./images/info-dark.png";
 import todayPNG from "./images/today.png";
 import latePNG from "./images/late.png";
 import plus from "./images/plus.png";
-import circleDark from "./images/circle-dark.png";
+import trashCanDark from "./images/trash-can-dark.svg";
 
 // dashboard function (for loading the side and top bars)
 function dashboard() {
@@ -53,10 +54,10 @@ function dashboard() {
   const plusIcon = document.createElement("img");
   const newTaskCategories = document.createElement("div");
 
-  const taskCategory = document.createElement("div"); // Built in task category for testing purposes
-  const taskCategoryIcon = document.createElement("img");
-  const taskCategoryTxtContainer = document.createElement("div");
-  const TaskCategoryTxt = document.createTextNode("General");
+  //   const taskCategory = document.createElement("div");
+  //   const taskCategoryIcon = document.createElement("img");
+  //   const taskCategoryTxtContainer = document.createElement("div");
+  //   const TaskCategoryTxt = document.createTextNode("General");
 
   const mainContent = document.createElement("div");
 
@@ -94,10 +95,10 @@ function dashboard() {
   plusIcon.setAttribute("alt", "add task category icon");
   newTaskCategories.setAttribute("class", "new-task-categories");
 
-  taskCategory.setAttribute("class", "task-category grow-2"); // Built in task category for testing purposes
-  taskCategoryIcon.setAttribute("class", "task-category-icon");
-  taskCategoryIcon.setAttribute("src", circleDark);
-  taskCategoryIcon.setAttribute("alt", "task category icon");
+  //   taskCategory.setAttribute("class", "task-category grow-2");
+  //   taskCategoryIcon.setAttribute("class", "task-category-icon");
+  //   taskCategoryIcon.setAttribute("src", circleDark);
+  //   taskCategoryIcon.setAttribute("alt", "task category icon");
 
   mainContent.setAttribute("id", "main-content");
 
@@ -132,10 +133,10 @@ function dashboard() {
   taskCategoriesHeader.appendChild(addTaskCategory);
   addTaskCategory.appendChild(plusIcon);
   taskCategories.appendChild(newTaskCategories);
-  newTaskCategories.appendChild(taskCategory);
-  taskCategory.appendChild(taskCategoryIcon);
-  taskCategory.appendChild(taskCategoryTxtContainer);
-  taskCategoryTxtContainer.appendChild(TaskCategoryTxt);
+  //   newTaskCategories.appendChild(taskCategory);
+  //   taskCategory.appendChild(taskCategoryIcon);
+  //   taskCategory.appendChild(taskCategoryTxtContainer);
+  //   taskCategoryTxtContainer.appendChild(TaskCategoryTxt);
   container.appendChild(mainContent);
 
   const mainContentPriority = document.querySelector(
@@ -158,7 +159,6 @@ function windowResizeSideBar(windowResizeDirection) {
     windowResizeDirection < 0 &&
     sideBar.offsetWidth === 290
   ) {
-    console.log("works negative");
     mainContent.style.gridColumn = "1 / 3";
     sideBar.style.width = "0";
     sideBar.style.padding = "0";
@@ -166,7 +166,6 @@ function windowResizeSideBar(windowResizeDirection) {
     taskCategories.style.width = "0";
   }
   if (document.body.offsetWidth > 800 && windowResizeDirection > 0) {
-    console.log("works positive");
     mainContentPriority.style.gridColumn = "2 / 3";
     sideBar.style.width = "250px";
     sideBar.style.padding = "20px";
@@ -204,6 +203,56 @@ function buttonSideBar(event) {
     }
   }
 }
+
+// Display task categories in side bar function
+function displayTaskCategories() {
+  for (let i = 0; i < taskCategoryLibrary.length; i++) {
+    // declare elements
+    const newTaskCategories = document.querySelector(".new-task-categories");
+    const taskCategory = document.createElement("div");
+    const taskCategoryIconColor = document.createElement("input");
+    const taskCategoryTxtContainer = document.createElement("div");
+    const TaskCategoryTxt = document.createTextNode(
+      taskCategoryLibrary[i].getTitle()
+    );
+    // const removeTaskCategory = document.createElement("div");
+    const removeTaskCategoryImg = document.createElement("img");
+
+    // add attributes
+    taskCategory.classList.add("task-category", "grow-2");
+    taskCategoryIconColor.classList.add("task-category-icon-color", i);
+    taskCategoryIconColor.setAttribute("type", "color");
+    taskCategoryIconColor.setAttribute(
+      "value",
+      taskCategoryLibrary[i].getColor()
+    );
+    taskCategoryTxtContainer.classList.add("task-category-name", i);
+    taskCategoryTxtContainer.setAttribute(
+      "onclick",
+      "this.contentEditable=true"
+    );
+    taskCategoryTxtContainer.setAttribute(
+      "onblur",
+      "this.contentEditable=false"
+    );
+    removeTaskCategoryImg.classList.add("remove-task-category", i);
+    removeTaskCategoryImg.setAttribute("src", trashCanDark);
+
+    // append elements to dom
+    newTaskCategories.appendChild(taskCategory);
+    taskCategory.appendChild(taskCategoryIconColor);
+    taskCategory.appendChild(taskCategoryTxtContainer);
+    taskCategoryTxtContainer.appendChild(TaskCategoryTxt);
+    taskCategory.appendChild(removeTaskCategoryImg);
+  }
+}
+
+// Clear task categories function
+function clearTaskCategories() {
+  const newTaskCategories = document.querySelector(".new-task-categories");
+  newTaskCategories.querySelectorAll("*").forEach((n) => n.remove());
+}
+
 // Modal window function
 // declare elements
 // add attributes
@@ -224,4 +273,10 @@ function buttonSideBar(event) {
 // add attributes
 // append elements to dom
 
-export { dashboard, windowResizeSideBar, buttonSideBar };
+export {
+  dashboard,
+  windowResizeSideBar,
+  buttonSideBar,
+  displayTaskCategories,
+  clearTaskCategories,
+};
