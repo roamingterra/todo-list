@@ -7,9 +7,9 @@
     <title>Todo List</title>
   </head>
   <body>
-    <!-- Start representing the dashboard in hard coded html-->
-    <div id="container">
-      <div id="top-bar" class="is-blurred">
+    <!-- Hard coded html-->
+   <div id="container">
+       <!-- <div id="top-bar" class="is-blurred">
         <div class="top-bar-left">
           <img
             class="side-bar-icon grow"
@@ -70,35 +70,21 @@
               />
             </button>
           </div>
-          <div class="new-task-categories">
-            <!-- <div class="task-category grow-2">
-              <img
-                class="task-category-icon"
-                src="./images-temp/circle-dark.svg"
-                alt="task category icon"
-              />
-              <div>General</div>
-            </div> -->
-          </div>
+          <div class="new-task-categories"></div>
         </div>
       </div>
       <div id="main-content" class="is-blurred"></div>
-    </div>
+    </div> -->
     <!-- form -->
 
-    <!-- <script src="./main.js"></script> -->
+    <script src="./main.js"></script>
   </body>
-  <style>
+
+  <!-- <style>
     @font-face {
       font-family: roboto-black;
       src: url(./fonts-temp/Roboto-Medium.ttf);
     }
-
-    /* Form */
-
-    /* .is-blurred {
-      filter: blur(5px);
-    } */
 
     #overlay {
       position: fixed;
@@ -343,7 +329,6 @@
       cursor: pointer;
     }
 
-    /* New addition to CSS */
     .task-category-icon-color {
       width: 1rem;
       height: 1.3rem;
@@ -374,12 +359,6 @@
     .task-category-name:hover {
       transform: scale(1.2);
     }
-
-    /* End of new addition to CSS */
-
-    /* .task-category-icon {
-      width: 1rem;
-    } */
 
     .new-task-categories {
       display: flex;
@@ -432,9 +411,9 @@
         width: 0;
       }
     }
-  </style>
+  </style> -->
 
-  <script>
+  <!-- <script>
     const container = document.querySelector("#container");
     const mainContentPriority = document.querySelector(
       "#container > #main-content"
@@ -495,10 +474,10 @@
       }
     });
 
-    // Array that holds all task category objects
+    // Array that holds all task category objects (BROUGHT OVER!!!)
     const taskCategoryLibrary = [];
 
-    // Task category factory function
+    // Task category factory function (BROUGHT OVER!!!)
     function taskCategoryFactory(title, color) {
       const tasksArray = [];
 
@@ -519,17 +498,17 @@
       };
     }
 
-    // Create object for dummy task category then place in array
+    // Create object for dummy task category then place in array (BROUGHT OVER!!!)
     const dummyTaskCategory = taskCategoryFactory("General", "#000000");
     taskCategoryLibrary.push(dummyTaskCategory);
 
-    // Logic function to check if there are five task category objects in array
+    // Logic function to check if there are five task category objects in array (BROUGHT OVER!!!)
     function checkTaskCategoryLibraryFull() {
       if (taskCategoryLibrary.length === 5) return true;
       else return false;
     }
 
-    // Display task categories function (dom-manipulation)
+    // Display task categories function (dom-manipulation) (BROUGHT OVER!!!)
     function displayTaskCategories() {
       for (let i = 0; i < taskCategoryLibrary.length; i++) {
         // declare elements
@@ -577,26 +556,26 @@
       }
     }
 
-    // Edit task category name function
+    // Edit task category name function (BROUGHT OVER!!!)
     function editTaskCategoryName(event) {
       taskCategoryLibrary[event.target.classList[1]].setTitle(
         event.target.textContent
       );
     }
 
-    // Edit task category icon color function
+    // Edit task category icon color function (BROUGHT OVER!!!)
     function editTaskCategoryIconColor(event) {
       taskCategoryLibrary[event.target.classList[1]].setColor(
         event.target.value
       );
     }
 
-    // Remove task category function
+    // Remove task category function (BROUGHT OVER!!!)
     function removeTaskCategory(event) {
       taskCategoryLibrary.splice(event.target.classList[1], 1);
     }
 
-    // Edit task category event listener
+    // Edit task category event listener (BROUGHT OVER!!!)
     const allTaskCategories = document.querySelectorAll(".new-task-categories");
     allTaskCategories.forEach((taskCategory) => {
       taskCategory.addEventListener("input", (event) => {
@@ -608,7 +587,7 @@
       });
     });
 
-    // Remove task category event listener
+    // Remove task category event listener (BROUGHT OVER!!!)
     allTaskCategories.forEach((taskCategory) => {
       taskCategory.addEventListener("click", (event) => {
         if (event.target.classList[0] === "remove-task-category") {
@@ -619,22 +598,22 @@
       });
     });
 
-    // Clear task categories function (dom-manipulation)
+    // Clear task categories function (dom-manipulation) (BROUGHT OVER!!!)
     function clearTaskCategories() {
       const newTaskCategories = document.querySelector(".new-task-categories");
       newTaskCategories.querySelectorAll("*").forEach((n) => n.remove());
     }
 
-    // Add new task category function (logic)
+    // Add new task category function (logic) (BROUGHT OVER!!!)
     function addNewTaskCategory() {
       const dummyTaskCategory = taskCategoryFactory("Category", "#000000");
       taskCategoryLibrary.push(dummyTaskCategory);
     }
 
-    // Display task categories
+    // Display task categories (BROUGHT OVER!!!)
     displayTaskCategories();
 
-    // Add task category event listener
+    // Add task category event listener (BROUGHT OVER!!!)
     const plusIcon = document.querySelector(".plus-icon");
     plusIcon.addEventListener("click", () => {
       if (!checkTaskCategoryLibraryFull()) {
@@ -643,5 +622,5 @@
         displayTaskCategories();
       }
     });
-  </script>
+  </script> -->
 </html>
