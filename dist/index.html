@@ -107,7 +107,7 @@
       width: 100vw;
       height: 100vh;
       background-color: rgba(0, 0, 0, 0.649);
-      z-index: 3;
+      z-index: 4;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -120,7 +120,7 @@
       padding: 40px;
       width: 420px;
       height: 300px;
-      z-index: 3;
+      z-index: 5;
       border-radius: 20px;
       background-color: #f0eef1;
       backdrop-filter: blur(15px);
@@ -240,7 +240,7 @@
       justify-content: space-between;
       padding: 20px;
       height: fit-content;
-      z-index: 2;
+      z-index: 3;
       box-shadow: 0 4px 2px rgba(0, 0, 0, 0.16);
       background-color: white;
     }
@@ -275,6 +275,7 @@
       text-align: justify;
       line-height: 25px;
       font-size: 1.25rem;
+      /* z-index: 100; */
     }
 
     .info:hover .info-container {
@@ -283,6 +284,7 @@
 
     /* Side bar */
     #side-bar {
+      position: relative;
       grid-row: 2 / 3;
       grid-column: 1 / 2;
       display: flex;
@@ -341,6 +343,7 @@
       cursor: pointer;
     }
 
+    /* New addition to CSS */
     .task-category-icon-color {
       width: 1rem;
       height: 1.3rem;
@@ -351,8 +354,28 @@
     }
 
     .task-category-icon-color:hover {
-      box-shadow: 0 0 7px rgb(0, 0, 0);
+      transform: scale(1.2);
     }
+
+    .task-category .remove-task-category {
+      visibility: hidden;
+      margin-left: auto;
+      width: 1.5rem;
+    }
+
+    .task-category:hover .remove-task-category {
+      visibility: visible;
+    }
+
+    .remove-task-category:hover {
+      transform: scale(1.2);
+    }
+
+    .task-category-name:hover {
+      transform: scale(1.2);
+    }
+
+    /* End of new addition to CSS */
 
     /* .task-category-icon {
       width: 1rem;
@@ -368,9 +391,13 @@
     /* Task categories will be added by the user */
     .task-category {
       display: flex;
+      justify-content: flex-start;
       align-items: center;
       gap: 10px;
       padding-left: 10px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      margin-right: 10px;
       cursor: pointer;
     }
 
@@ -515,6 +542,8 @@
         const TaskCategoryTxt = document.createTextNode(
           taskCategoryLibrary[i].getTitle()
         );
+        // const removeTaskCategory = document.createElement("div");
+        const removeTaskCategoryImg = document.createElement("img");
 
         // add attributes
         taskCategory.classList.add("task-category", "grow-2");
@@ -533,12 +562,18 @@
           "onblur",
           "this.contentEditable=false"
         );
+        removeTaskCategoryImg.classList.add("remove-task-category", i);
+        removeTaskCategoryImg.setAttribute(
+          "src",
+          "./images-temp/trash-can-dark.svg"
+        );
 
         // append elements to dom
         newTaskCategories.appendChild(taskCategory);
         taskCategory.appendChild(taskCategoryIconColor);
         taskCategory.appendChild(taskCategoryTxtContainer);
         taskCategoryTxtContainer.appendChild(TaskCategoryTxt);
+        taskCategory.appendChild(removeTaskCategoryImg);
       }
     }
 
@@ -556,6 +591,11 @@
       );
     }
 
+    // Remove task category function
+    function removeTaskCategory(event) {
+      taskCategoryLibrary.splice(event.target.classList[1], 1);
+    }
+
     // Edit task category event listener
     const allTaskCategories = document.querySelectorAll(".new-task-categories");
     allTaskCategories.forEach((taskCategory) => {
@@ -568,6 +608,17 @@
       });
     });
 
+    // Remove task category event listener
+    allTaskCategories.forEach((taskCategory) => {
+      taskCategory.addEventListener("click", (event) => {
+        if (event.target.classList[0] === "remove-task-category") {
+          removeTaskCategory(event);
+          clearTaskCategories();
+          displayTaskCategories();
+        }
+      });
+    });
+
     // Clear task categories function (dom-manipulation)
     function clearTaskCategories() {
       const newTaskCategories = document.querySelector(".new-task-categories");
@@ -576,7 +627,7 @@
 
     // Add new task category function (logic)
     function addNewTaskCategory() {
-      const dummyTaskCategory = taskCategoryFactory("New Category", "#000000");
+      const dummyTaskCategory = taskCategoryFactory("Category", "#000000");
       taskCategoryLibrary.push(dummyTaskCategory);
     }
 
