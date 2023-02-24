@@ -9,6 +9,8 @@ import {
   highlightSelectedTaskCategory,
   removeHighlightTaskCategories,
   clearTaskCategoryContent,
+  buildTaskForm,
+  removeTaskForm,
 } from "./dom-manipulation.js";
 import {
   taskCategoryLibrary,
@@ -61,7 +63,7 @@ plusIcon.addEventListener("click", () => {
     addNewTaskCategory();
     clearTaskCategories();
     displayTaskCategories();
-    if (findTaskCategoryIndexIsSelected()) {
+    if (findTaskCategoryIndexIsSelected() !== undefined) {
       highlightSelectedTaskCategory(findTaskCategoryIndexIsSelected());
     }
   }
@@ -87,7 +89,6 @@ allTaskCategories.forEach((taskCategory) => {
       removeTaskCategory(event);
       clearTaskCategories();
       displayTaskCategories();
-      console.log(findTaskCategoryIndexIsSelected());
       // If the task category that was removed was the one that was selected
       if (findTaskCategoryIndexIsSelected() !== undefined) {
         taskCategoryContent(findTaskCategoryIndexIsSelected());
@@ -112,4 +113,18 @@ allTaskCategories.forEach((taskCategory) => {
       taskCategoryContent(findTaskCategoryIndexIsSelected());
     }
   });
+});
+
+// Click add task button event listener
+window.addEventListener("click", (event) => {
+  if (event.target.matches(".add-task-button")) {
+    buildTaskForm();
+  }
+});
+
+// Remove add task form event listener
+window.addEventListener("click", (event) => {
+  if (event.target.matches("#close") || event.target.matches("#overlay")) {
+    removeTaskForm();
+  }
 });

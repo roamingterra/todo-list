@@ -7,6 +7,7 @@ import todayPNG from "./images/today.png";
 import latePNG from "./images/late.png";
 import plus from "./images/plus.png";
 import trashCanDark from "./images/trash-can-dark.svg";
+import closeDark from "./images/close-dark.svg";
 
 // dashboard function (for loading the side and top bars)
 function dashboard() {
@@ -53,17 +54,12 @@ function dashboard() {
   const addTaskCategory = document.createElement("button");
   const plusIcon = document.createElement("img");
   const newTaskCategories = document.createElement("div");
-
-  //   const taskCategory = document.createElement("div");
-  //   const taskCategoryIcon = document.createElement("img");
-  //   const taskCategoryTxtContainer = document.createElement("div");
-  //   const TaskCategoryTxt = document.createTextNode("General");
-
   const mainContent = document.createElement("div");
 
   // add attributes
   container.setAttribute("id", "container");
   topBar.setAttribute("id", "top-bar");
+  topBar.setAttribute("class", "is-blurred");
   topBarLeft.setAttribute("class", "top-bar-left");
   sideBarIcon.setAttribute("class", "side-bar-icon grow");
   sideBarIcon.setAttribute("src", tallyMark3);
@@ -78,6 +74,7 @@ function dashboard() {
   infoIcon.setAttribute("alt", "info icon");
   infoContainer.setAttribute("class", "info-container");
   sideBar.setAttribute("id", "side-bar");
+  sideBar.setAttribute("class", "is-blurred");
   todayLate.setAttribute("class", "today-late");
   today.setAttribute("class", "today grow-2");
   todayIcon.setAttribute("class", "today-icon");
@@ -94,13 +91,8 @@ function dashboard() {
   plusIcon.setAttribute("src", plus);
   plusIcon.setAttribute("alt", "add task category icon");
   newTaskCategories.setAttribute("class", "new-task-categories");
-
-  //   taskCategory.setAttribute("class", "task-category grow-2");
-  //   taskCategoryIcon.setAttribute("class", "task-category-icon");
-  //   taskCategoryIcon.setAttribute("src", circleDark);
-  //   taskCategoryIcon.setAttribute("alt", "task category icon");
-
   mainContent.setAttribute("id", "main-content");
+  mainContent.setAttribute("class", "is-blurred");
 
   // append elements to dom
   body.appendChild(container);
@@ -133,10 +125,6 @@ function dashboard() {
   taskCategoriesHeader.appendChild(addTaskCategory);
   addTaskCategory.appendChild(plusIcon);
   taskCategories.appendChild(newTaskCategories);
-  //   newTaskCategories.appendChild(taskCategory);
-  //   taskCategory.appendChild(taskCategoryIcon);
-  //   taskCategory.appendChild(taskCategoryTxtContainer);
-  //   taskCategoryTxtContainer.appendChild(TaskCategoryTxt);
   container.appendChild(mainContent);
 
   const mainContentPriority = document.querySelector(
@@ -266,7 +254,7 @@ function taskCategoryContent(taskCategoryIndex) {
   // add attributes
   content.classList.add("task-category-content", taskCategoryIndex);
   addTaskButtonWrapper.setAttribute("class", "add-task-button-wrapper");
-  addTaskButton.setAttribute("class", "add-task-button");
+  addTaskButton.setAttribute("class", `add-task-button ${taskCategoryIndex}`);
   taskCards.setAttribute("class", "task-cards");
 
   // append elements to dom
@@ -279,15 +267,9 @@ function taskCategoryContent(taskCategoryIndex) {
 
 // Highlight selected task category function
 function highlightSelectedTaskCategory(selectedElementClassIndex) {
-  //   const selectedElementClassIndex = event.target.classList[1];
-  //   console.log(selectedElementClassIndex);
-  //   console.log(`task-category ${selectedElementClassIndex}`);
-
   const selectedTaskCategory = document.getElementsByClassName(
     `task-category ${selectedElementClassIndex}`
   );
-  console.log(selectedTaskCategory[0]);
-  console.log(selectedTaskCategory[0].style.backgroundColor);
   selectedTaskCategory[0].style.backgroundColor = "#f0eef1";
 }
 
@@ -308,9 +290,166 @@ function clearTaskCategoryContent() {
 }
 
 // Modal window function
-// declare elements
-// add attributes
-// append elements to dom (sibling of #main-content element)
+function buildTaskForm() {
+  // declare elements
+  const body = document.querySelector("body");
+  const overlay = document.createElement("div");
+  const formContainer = document.createElement("div");
+  const removeOptions = document.createElement("div");
+  const deleteTask = document.createElement("div");
+  const deleteTaskImg = document.createElement("img");
+  const close = document.createElement("div");
+  const closeImg = document.createElement("img");
+  const form = document.createElement("form");
+  const formColumn1 = document.createElement("div");
+  const taskTitle = document.createElement("div");
+  const taskTitleLabel = document.createElement("label");
+  const taskTitleLabelTxt = document.createTextNode("TASK TITLE");
+  const taskTitleInput = document.createElement("input");
+  const description = document.createElement("div");
+  const descriptionLabel = document.createElement("label");
+  const descriptionLabelTxt = document.createTextNode("DESCRIPTION");
+  const descriptionTextArea = document.createElement("textarea");
+  const formColumn2 = document.createElement("div");
+  const column2Option1 = document.createElement("div");
+  const taskCategoriesSelectionLabel = document.createElement("label");
+  const taskCategoriesSelectionLabelTxt =
+    document.createTextNode("TASK CATEGORY:");
+  const taskCategoriesSelectionSelect = document.createElement("select");
+  const column2Option2 = document.createElement("div");
+  const dueDateSelectionLabel = document.createElement("label");
+  const dueDateSelectionLabelTxt = document.createTextNode("DUE DATE:");
+  const dueDateSelectionInput = document.createElement("input");
+  const column2Option3 = document.createElement("div");
+  const priorityLabel = document.createElement("label");
+  const priorityLabelTxt = document.createTextNode("PRIORITY:");
+  const prioritySelect = document.createElement("select");
+  const priority1Option = document.createElement("option");
+  const priority1OptionTxt = document.createTextNode("Priority 1");
+  const priority2Option = document.createElement("option");
+  const priority2OptionTxt = document.createTextNode("Priority 2");
+  const priority3Option = document.createElement("option");
+  const priority3OptionTxt = document.createTextNode("Priority 3");
+  const priority4Option = document.createElement("option");
+  const priority4OptionTxt = document.createTextNode("Priority 4");
+  const submitButton = document.createElement("button");
+  const submitButtonTxt = document.createTextNode("SUBMIT");
+
+  // add attributes
+  overlay.setAttribute("id", "overlay");
+  formContainer.setAttribute("id", "form-container");
+  removeOptions.setAttribute("class", "remove-options");
+  deleteTask.setAttribute("class", "delete-task");
+  deleteTaskImg.setAttribute("id", "delete");
+  deleteTaskImg.setAttribute("src", trashCanDark);
+  deleteTaskImg.setAttribute("alt", "delete icon");
+  close.setAttribute("class", "close");
+  closeImg.setAttribute("id", "close");
+  closeImg.setAttribute("src", closeDark);
+  closeImg.setAttribute("alt", "close form window icon");
+  form.setAttribute("action", "javascript:function();"); // TO BE SENT TO A LOGIC.JS FUNCTION
+  form.setAttribute("method", "post");
+  form.setAttribute("id", "form");
+  formColumn1.setAttribute("class", "form-column-1");
+  taskTitle.setAttribute("class", "task-title");
+  taskTitleLabel.setAttribute("for", "task-title");
+  taskTitleInput.setAttribute("type", "text");
+  taskTitleInput.setAttribute("id", "task-title");
+  taskTitleInput.setAttribute("required", "");
+  taskTitleInput.setAttribute("maxlength", "30");
+  description.setAttribute("class", "description");
+  descriptionLabel.setAttribute("for", "description");
+  descriptionTextArea.setAttribute("name", "description");
+  descriptionTextArea.setAttribute("id", "description");
+  descriptionTextArea.setAttribute("cols", "28");
+  descriptionTextArea.setAttribute("rows", "6");
+  descriptionTextArea.setAttribute("form", "form");
+  formColumn2.setAttribute("class", "form-column-2");
+  column2Option1.setAttribute("class", "column-2-option");
+  taskCategoriesSelectionLabel.setAttribute("for", "task-categories-selection");
+  taskCategoriesSelectionSelect.setAttribute("id", "task-categories-selection");
+  taskCategoriesSelectionSelect.setAttribute("name", "task-categories");
+  column2Option2.setAttribute("class", "column-2-option");
+  dueDateSelectionLabel.setAttribute("for", "due-date-selection");
+  dueDateSelectionInput.setAttribute("type", "date");
+  dueDateSelectionInput.setAttribute("id", "due-date-selection");
+  dueDateSelectionInput.setAttribute("name", "due-date-selection");
+  column2Option3.setAttribute("class", "column-2-option");
+  priorityLabel.setAttribute("for", "priority");
+  prioritySelect.setAttribute("id", "priority");
+  prioritySelect.setAttribute("name", "priority");
+  priority1Option.setAttribute("value", "priority-1");
+  priority2Option.setAttribute("value", "priority-2");
+  priority3Option.setAttribute("value", "priority-3");
+  priority4Option.setAttribute("value", "priority-4");
+  submitButton.setAttribute("type", "submit");
+  submitButton.setAttribute("id", "submit");
+  submitButton.setAttribute("form", "form");
+
+  // append elements to dom (sibling of container)
+  body.appendChild(overlay);
+  overlay.appendChild(formContainer);
+  formContainer.appendChild(removeOptions);
+  removeOptions.appendChild(deleteTask);
+  deleteTask.appendChild(deleteTaskImg);
+  removeOptions.appendChild(close);
+  close.appendChild(closeImg);
+  formContainer.appendChild(form);
+  form.appendChild(formColumn1);
+  formColumn1.appendChild(taskTitle);
+  taskTitle.appendChild(taskTitleLabel);
+  taskTitleLabel.appendChild(taskTitleLabelTxt);
+  taskTitle.appendChild(taskTitleInput);
+  formColumn1.appendChild(description);
+  description.appendChild(descriptionLabel);
+  descriptionLabel.appendChild(descriptionLabelTxt);
+  description.appendChild(descriptionTextArea);
+  form.appendChild(formColumn2);
+  formColumn2.appendChild(column2Option1);
+  column2Option1.appendChild(taskCategoriesSelectionLabel);
+  taskCategoriesSelectionLabel.appendChild(taskCategoriesSelectionLabelTxt);
+  column2Option1.appendChild(taskCategoriesSelectionSelect);
+  formColumn2.appendChild(column2Option2);
+  column2Option2.appendChild(dueDateSelectionLabel);
+  dueDateSelectionLabel.appendChild(dueDateSelectionLabelTxt);
+  column2Option2.appendChild(dueDateSelectionInput);
+  formColumn2.appendChild(column2Option3);
+  column2Option3.appendChild(priorityLabel);
+  priorityLabel.appendChild(priorityLabelTxt);
+  column2Option3.appendChild(prioritySelect);
+  prioritySelect.appendChild(priority1Option);
+  priority1Option.appendChild(priority1OptionTxt);
+  prioritySelect.appendChild(priority2Option);
+  priority2Option.appendChild(priority2OptionTxt);
+  prioritySelect.appendChild(priority3Option);
+  priority3Option.appendChild(priority3OptionTxt);
+  prioritySelect.appendChild(priority4Option);
+  priority4Option.appendChild(priority4OptionTxt);
+  formContainer.appendChild(submitButton);
+  submitButton.appendChild(submitButtonTxt);
+
+  // Add blur styling
+  const isBlurredElements = document.querySelectorAll(".is-blurred");
+  isBlurredElements.forEach((isBlurredElement) => {
+    isBlurredElement.style.filter = "blur(5px)";
+  });
+}
+
+// Remove task form function
+function removeTaskForm() {
+  const body = document.querySelector("body");
+  const overlay = document.querySelector("#overlay");
+  while (overlay.firstChild) {
+    overlay.removeChild(overlay.lastChild);
+  }
+  body.removeChild(overlay);
+
+  // Remove blur styling
+  const isBlurredElements = document.querySelectorAll(".is-blurred");
+  isBlurredElements.forEach((isBlurredElement) => {
+    isBlurredElement.style.filter = "none";
+  });
+}
 
 // today function (for loading the today tab which contains all tasks that are due today)
 // declare elements
@@ -332,4 +471,6 @@ export {
   highlightSelectedTaskCategory,
   removeHighlightTaskCategories,
   clearTaskCategoryContent,
+  buildTaskForm,
+  removeTaskForm,
 };
