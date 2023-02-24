@@ -5,6 +5,10 @@ import {
   buttonSideBar,
   displayTaskCategories,
   clearTaskCategories,
+  taskCategoryContent,
+  highlightSelectedTaskCategory,
+  removeHighlightTaskCategories,
+  clearTaskCategoryContent,
 } from "./dom-manipulation.js";
 import {
   taskCategoryLibrary,
@@ -14,12 +18,12 @@ import {
   editTaskCategoryIconColor,
   removeTaskCategory,
   addNewTaskCategory,
+  SelectTaskCategory,
+  removeTaskCategorySelection,
+  findTaskCategoryIndexIsSelected,
   getDirectionOfWindowResize,
 } from "./logic.js";
 import "./style.css";
-
-// Array that holds all task category objects
-// const taskCategoryLibrary = [];
 
 dashboard();
 
@@ -57,6 +61,9 @@ plusIcon.addEventListener("click", () => {
     addNewTaskCategory();
     clearTaskCategories();
     displayTaskCategories();
+    if (findTaskCategoryIndexIsSelected()) {
+      highlightSelectedTaskCategory(findTaskCategoryIndexIsSelected());
+    }
   }
 });
 
@@ -76,9 +83,33 @@ allTaskCategories.forEach((taskCategory) => {
 allTaskCategories.forEach((taskCategory) => {
   taskCategory.addEventListener("click", (event) => {
     if (event.target.classList[0] === "remove-task-category") {
+      clearTaskCategoryContent();
       removeTaskCategory(event);
       clearTaskCategories();
       displayTaskCategories();
+      console.log(findTaskCategoryIndexIsSelected());
+      // If the task category that was removed was the one that was selected
+      if (findTaskCategoryIndexIsSelected() !== undefined) {
+        taskCategoryContent(findTaskCategoryIndexIsSelected());
+        highlightSelectedTaskCategory(findTaskCategoryIndexIsSelected());
+      }
+    }
+  });
+});
+
+// Select task category event listener
+allTaskCategories.forEach((taskCategory) => {
+  taskCategory.addEventListener("click", (event) => {
+    if (
+      event.target.classList[0] === "task-category" ||
+      event.target.classList[0] === "task-category-name"
+    ) {
+      removeHighlightTaskCategories();
+      removeTaskCategorySelection();
+      SelectTaskCategory(event.target.classList[1]);
+      highlightSelectedTaskCategory(findTaskCategoryIndexIsSelected());
+      clearTaskCategoryContent();
+      taskCategoryContent(findTaskCategoryIndexIsSelected());
     }
   });
 });

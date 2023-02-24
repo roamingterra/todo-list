@@ -219,7 +219,7 @@ function displayTaskCategories() {
     const removeTaskCategoryImg = document.createElement("img");
 
     // add attributes
-    taskCategory.classList.add("task-category", "grow-2");
+    taskCategory.classList.add("task-category", i, "grow-2");
     taskCategoryIconColor.classList.add("task-category-icon-color", i);
     taskCategoryIconColor.setAttribute("type", "color");
     taskCategoryIconColor.setAttribute(
@@ -253,6 +253,60 @@ function clearTaskCategories() {
   newTaskCategories.querySelectorAll("*").forEach((n) => n.remove());
 }
 
+// taskCategoryContent function (for loading the content of a taskCategory that has been selected)
+function taskCategoryContent(taskCategoryIndex) {
+  // declare elements
+  const mainContent = document.querySelector("#main-content");
+  const content = document.createElement("div");
+  const addTaskButtonWrapper = document.createElement("div");
+  const addTaskButton = document.createElement("button");
+  const addTaskButtonTxt = document.createTextNode("+ Add Task");
+  const taskCards = document.createElement("div");
+
+  // add attributes
+  content.classList.add("task-category-content", taskCategoryIndex);
+  addTaskButtonWrapper.setAttribute("class", "add-task-button-wrapper");
+  addTaskButton.setAttribute("class", "add-task-button");
+  taskCards.setAttribute("class", "task-cards");
+
+  // append elements to dom
+  mainContent.appendChild(content);
+  content.appendChild(addTaskButtonWrapper);
+  addTaskButtonWrapper.appendChild(addTaskButton);
+  addTaskButton.appendChild(addTaskButtonTxt);
+  content.appendChild(taskCards);
+}
+
+// Highlight selected task category function
+function highlightSelectedTaskCategory(selectedElementClassIndex) {
+  //   const selectedElementClassIndex = event.target.classList[1];
+  //   console.log(selectedElementClassIndex);
+  //   console.log(`task-category ${selectedElementClassIndex}`);
+
+  const selectedTaskCategory = document.getElementsByClassName(
+    `task-category ${selectedElementClassIndex}`
+  );
+  console.log(selectedTaskCategory[0]);
+  console.log(selectedTaskCategory[0].style.backgroundColor);
+  selectedTaskCategory[0].style.backgroundColor = "#f0eef1";
+}
+
+// Remove highlight from task categories function
+function removeHighlightTaskCategories() {
+  const newTaskCategories = document.querySelector(".new-task-categories");
+  for (let i = 0; i < newTaskCategories.children.length; i++) {
+    if (newTaskCategories.children[i].style.backgroundColor !== "") {
+      newTaskCategories.children[i].style.backgroundColor = "white";
+    }
+  }
+}
+
+// Clear task category content function
+function clearTaskCategoryContent() {
+  const mainContent = document.querySelector("#main-content");
+  mainContent.querySelectorAll("*").forEach((n) => n.remove());
+}
+
 // Modal window function
 // declare elements
 // add attributes
@@ -268,15 +322,14 @@ function clearTaskCategories() {
 // add attributes
 // append elements to dom
 
-// taskCategory function (for loading the content of a taskCategory that has been selected)
-// declare elements
-// add attributes
-// append elements to dom
-
 export {
   dashboard,
   windowResizeSideBar,
   buttonSideBar,
   displayTaskCategories,
   clearTaskCategories,
+  taskCategoryContent,
+  highlightSelectedTaskCategory,
+  removeHighlightTaskCategories,
+  clearTaskCategoryContent,
 };

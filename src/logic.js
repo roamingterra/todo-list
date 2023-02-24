@@ -3,21 +3,26 @@
 // methods: getTitle, getColor, getTasks (get tasks from tasks array), setTitle, setColor, setTask (add task to tasks array),
 function taskCategoryFactory(title, color) {
   const tasksArray = [];
+  let isSelected = false;
 
   const getTitle = () => title;
   const getColor = () => color;
   const getTasks = () => tasksArray;
+  const getIsSelected = () => isSelected;
   const setTitle = (newTitle) => (title = newTitle);
   const setColor = (newColor) => (color = newColor);
   const setTask = (newTask) => tasksArray.push(newTask);
+  const setIsSelected = (booleanValue) => (isSelected = booleanValue);
 
   return {
     getTitle,
     getColor,
     getTasks,
+    getIsSelected,
     setTitle,
     setColor,
     setTask,
+    setIsSelected,
   };
 }
 
@@ -58,6 +63,31 @@ function removeTaskCategory(event) {
 function addNewTaskCategory() {
   const dummyTaskCategory = taskCategoryFactory("Category", "#000000");
   taskCategoryLibrary.push(dummyTaskCategory);
+}
+
+// Select task category function
+function SelectTaskCategory(indexValue) {
+  for (let i = 0; i < taskCategoryLibrary.length; i++) {
+    taskCategoryLibrary[indexValue].setIsSelected(true);
+  }
+}
+
+// Set the task category in the array that is found to be true to false
+function removeTaskCategorySelection() {
+  for (let i = 0; i < taskCategoryLibrary.length; i++) {
+    if (taskCategoryLibrary[i].getIsSelected()) {
+      taskCategoryLibrary[i].setIsSelected(false);
+    }
+  }
+}
+
+// Find and return index of task category that is selected
+function findTaskCategoryIndexIsSelected() {
+  for (let i = 0; i < taskCategoryLibrary.length; i++) {
+    if (taskCategoryLibrary[i].getIsSelected()) {
+      return i;
+    }
+  }
 }
 
 // today array (contains all task objects that have dueDate of todays date)
@@ -109,5 +139,8 @@ export {
   editTaskCategoryIconColor,
   removeTaskCategory,
   addNewTaskCategory,
+  SelectTaskCategory,
+  removeTaskCategorySelection,
+  findTaskCategoryIndexIsSelected,
   getDirectionOfWindowResize,
 };
