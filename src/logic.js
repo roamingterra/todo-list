@@ -181,19 +181,70 @@ function formatDate(date) {
 }
 
 // today array (contains all task objects that have dueDate of todays date)
+const todayLibrary = [];
 
 // late array (contains all task objects that have a dueDate earlier that todays date)
+const lateLibrary = [];
 
-// setComplete function (sets task as complete and deletes it from all arrays that contain it)
-// This function performs an animation before deleting it unlike the next function...
-
-// deleteTask function (deletes task from all arrays that contains it)
-
-// organizeTask function (sends task object to appropriate arrays)
+// Sort tasks into today array function (sends task object to appropriate arrays)
 // NOTE: Something to consider is that when a new day comes along, certain task objects will need to be automatically
 //       placed into either the today array, or the late array.
+function sortTasksToday() {
+  // Clear todayLibrary array
+  todayLibrary.length = 0;
+  // Create new today date
+  const today = format(new Date(), "yyyy-MM-dd");
+  // Iterate through each task category and each task and determine which ones are due today,
+  // and place tasks due today in the today array
+  for (let i = 0; i < taskCategoryLibrary.length; i++) {
+    for (let j = 0; j < taskCategoryLibrary[i].getTasks().length; j++) {
+      if (taskCategoryLibrary[i].getTasks()[j].getDueDate() === today) {
+        todayLibrary.push(taskCategoryLibrary[i].getTasks()[j]);
+      }
+    }
+  }
+  // Sort today array based on priority
+  for (let i = 0; i < todayLibrary.length; i++) {
+    for (let j = i; j < todayLibrary.length; j++) {
+      if (todayLibrary[i].getPriority() > todayLibrary[j].getPriority()) {
+        [todayLibrary[i], todayLibrary[j]] = [todayLibrary[j], todayLibrary[i]];
+      }
+    }
+  }
+}
 
-// editTask function (receives data from user form, then calls task set methods to change the appropriate properties)
+// Sort tasks into late array function (sends task object to appropriate arrays)
+// NOTE: Something to consider is that when a new day comes along, certain task objects will need to be automatically
+//       placed into either the today array, or the late array.
+function sortTasksLate() {
+  // Clear lateLibrary array
+  todayLibrary.length = 0;
+  // Create new today date
+  const today = format(new Date(), "yyyy-MM-dd");
+  // Iterate through each task category and each task and determine which ones are late,
+  // and place late tasks in the late array
+  for (let i = 0; i < taskCategoryLibrary.length; i++) {
+    for (let j = 0; j < taskCategoryLibrary[i].getTasks().length; j++) {
+      if (taskCategoryLibrary[i].getTasks()[j].getDueDate() < today) {
+        lateLibrary.push(taskCategoryLibrary[i].getTasks()[j]);
+      }
+    }
+  }
+
+  // Sort late array based on priority and date
+  for (let i = 0; i < lateLibrary.length; i++) {
+    for (let j = i; j < lateLibrary.length; j++) {
+      if (lateLibrary[i].getDueDate() > lateLibrary[j].getDueDate()) {
+        [lateLibrary[i], lateLibrary[j]] = [lateLibrary[j], lateLibrary[i]];
+      } else if (
+        lateLibrary[i].getDueDate() === lateLibrary[j].getDueDate() &&
+        lateLibrary[i].getPriority() > lateLibrary[j].getPriority()
+      ) {
+        [lateLibrary[i], lateLibrary[j]] = [lateLibrary[j], lateLibrary[i]];
+      }
+    }
+  }
+}
 
 // changeTheme function (changes UI to dark mode or light mode )
 
@@ -233,5 +284,9 @@ export {
   returnIndexTaskCategoryValue,
   moveTaskNewTaskCategory,
   formatDate,
+  todayLibrary,
+  lateLibrary,
+  sortTasksToday,
+  sortTasksLate,
   getDirectionOfWindowResize,
 };

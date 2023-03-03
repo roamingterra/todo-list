@@ -29,6 +29,10 @@ import {
   findTaskCategoryIndexIsSelected,
   returnIndexTaskCategoryValue,
   moveTaskNewTaskCategory,
+  todayLibrary,
+  lateLibrary,
+  sortTasksToday,
+  sortTasksLate,
   getDirectionOfWindowResize,
 } from "./logic.js";
 import "./style.css";
@@ -247,4 +251,20 @@ window.addEventListener("click", (event) => {
       taskCategoryContentTaskCards(findTaskCategoryIndexIsSelected());
     }, 500);
   }
+});
+
+// Today selection event listener
+const today = document.querySelector(".today");
+
+today.addEventListener("click", (event) => {
+  sortTasksToday();
+  console.log(todayLibrary);
+});
+
+// Late selection event listener
+const late = document.querySelector(".late");
+
+late.addEventListener("click", (event) => {
+  sortTasksLate();
+  for (let i = 0; i < lateLibrary.length; i++) {}
 });
