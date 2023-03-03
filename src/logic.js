@@ -1,3 +1,10 @@
+const {
+  format,
+  differenceInDays,
+  differenceInYears,
+  parseISO,
+} = require("date-fns");
+
 // taskCategory factory function (creates task category objects, which will contain tasks)
 // properties: title (received from user form), color (received from user form), array of tasks
 // methods: getTitle, getColor, getTasks (get tasks from tasks array), setTitle, setColor, setTask (add task to tasks array),
@@ -13,6 +20,7 @@ function taskCategoryFactory(title, color) {
   const setColor = (newColor) => (color = newColor);
   const setTask = (newTask) => tasksArray.push(newTask);
   const setIsSelected = (booleanValue) => (isSelected = booleanValue);
+  const removeTask = (taskIndex) => tasksArray.splice(taskIndex, 1);
 
   return {
     getTitle,
@@ -23,6 +31,7 @@ function taskCategoryFactory(title, color) {
     setColor,
     setTask,
     setIsSelected,
+    removeTask,
   };
 }
 
@@ -32,6 +41,31 @@ function taskCategoryFactory(title, color) {
 //             priority (received from user form)
 // methods: getTitle, getDescription, getCategory, getDueDate, getPriority
 //          setTitle, setDescription, setCategory, setDueDate, setPriority
+function taskFactory(title, description, category, dueDate, priority) {
+  const getTitle = () => title;
+  const getDescription = () => description;
+  const getCategory = () => category;
+  const getDueDate = () => dueDate;
+  const getPriority = () => priority;
+  const setTitle = (newTitle) => (title = newTitle);
+  const setDescription = (newDescription) => (description = newDescription);
+  const setCategory = (newCategory) => (category = newCategory);
+  const setDueDate = (newDueDate) => (dueDate = newDueDate);
+  const setPriority = (newPriority) => (priority = newPriority);
+
+  return {
+    getTitle,
+    getDescription,
+    getCategory,
+    getDueDate,
+    getPriority,
+    setTitle,
+    setDescription,
+    setCategory,
+    setDueDate,
+    setPriority,
+  };
+}
 
 // Array that holds all task category objects
 const taskCategoryLibrary = [];
@@ -90,6 +124,62 @@ function findTaskCategoryIndexIsSelected() {
   }
 }
 
+// Return index from task category value
+function returnIndexTaskCategoryValue(taskCategoryValue) {
+  const regEXP = /(\d+)(?!.*\d)/;
+  const result = taskCategoryValue.match(regEXP);
+  return result[0];
+}
+
+// Move task into new task category
+function moveTaskNewTaskCategory(
+  taskCategoryIndex,
+  taskIndex,
+  newTaskCategoryIndex
+) {
+  // Move element to new task category array
+  taskCategoryLibrary[newTaskCategoryIndex].setTask(
+    taskCategoryLibrary[taskCategoryIndex].getTasks()[taskIndex]
+  );
+
+  // Remove element from original task category array
+  taskCategoryLibrary[taskCategoryIndex].removeTask(taskIndex);
+}
+
+// format date
+function formatDate(date) {
+  const today = format(new Date(), "yyyy-MM-dd");
+  const differenceDays = differenceInDays(parseISO(date), parseISO(today));
+  const differenceYears = differenceInYears(parseISO(date), parseISO(today));
+
+  if (date === "") {
+    return "";
+  }
+  if (differenceDays < 0) {
+    return format(parseISO(date), "LLL dd yyyy") + " !!!";
+  }
+
+  if (differenceDays === 0) {
+    return "today";
+  }
+
+  if (differenceDays === 1) {
+    return "tomorrow";
+  }
+
+  if (differenceDays > 1 && differenceDays < 7) {
+    return format(parseISO(date), "EEEE");
+  }
+
+  if (differenceDays >= 7 && differenceYears === 0) {
+    return format(parseISO(date), "LLL dd");
+  }
+
+  if (differenceYears >= 1) {
+    return format(parseISO(date), "LLL dd yyyy");
+  }
+}
+
 // today array (contains all task objects that have dueDate of todays date)
 
 // late array (contains all task objects that have a dueDate earlier that todays date)
@@ -98,9 +188,6 @@ function findTaskCategoryIndexIsSelected() {
 // This function performs an animation before deleting it unlike the next function...
 
 // deleteTask function (deletes task from all arrays that contains it)
-
-// addTask function (receives data from the user form and calls the task factory function, feeding it the user parameters)
-// ***This may not be needed***
 
 // organizeTask function (sends task object to appropriate arrays)
 // NOTE: Something to consider is that when a new day comes along, certain task objects will need to be automatically
@@ -132,8 +219,9 @@ const getDirectionOfWindowResize = (() => {
 })();
 
 export {
-  taskCategoryFactory,
   taskCategoryLibrary,
+  taskCategoryFactory,
+  taskFactory,
   checkTaskCategoryLibraryFull,
   editTaskCategoryName,
   editTaskCategoryIconColor,
@@ -142,5 +230,8 @@ export {
   SelectTaskCategory,
   removeTaskCategorySelection,
   findTaskCategoryIndexIsSelected,
+  returnIndexTaskCategoryValue,
+  moveTaskNewTaskCategory,
+  formatDate,
   getDirectionOfWindowResize,
 };

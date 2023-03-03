@@ -1,5 +1,9 @@
 // Imports
-import { taskCategoryLibrary } from "./logic";
+import {
+  taskCategoryLibrary,
+  formatDate,
+  findTaskCategoryIndexIsSelected,
+} from "./logic";
 import tallyMark3 from "./images/tally-mark-3.png";
 import sunHollow from "./images/sun-hollow.svg";
 import infoDark from "./images/info-dark.png";
@@ -8,6 +12,8 @@ import latePNG from "./images/late.png";
 import plus from "./images/plus.png";
 import trashCanDark from "./images/trash-can-dark.svg";
 import closeDark from "./images/close-dark.svg";
+import circleDark from "./images/circle-outline.svg";
+import checkMark from "./images/check-mark-icon.png";
 
 // dashboard function (for loading the side and top bars)
 function dashboard() {
@@ -265,6 +271,74 @@ function taskCategoryContent(taskCategoryIndex) {
   content.appendChild(taskCards);
 }
 
+// taskCategoryContentTaskCards function (for loading the tasks of a taskCategory that has been selected)
+function taskCategoryContentTaskCards(taskCategoryIndex) {
+  // Displaying tasks
+  for (
+    let i = 0;
+    i < taskCategoryLibrary[taskCategoryIndex].getTasks().length;
+    i++
+  ) {
+    // declare elements
+    const taskCards = document.querySelector(".task-cards");
+    const taskCardContainer = document.createElement("div");
+    const completeIconContainer = document.createElement("div");
+    const completeIcon = document.createElement("img");
+    const checkMarkImg = document.createElement("img");
+    const titleAndDateContainer = document.createElement("div");
+    const taskTitle = document.createElement("div");
+    const taskTitleTxt = document.createTextNode(
+      taskCategoryLibrary[taskCategoryIndex].getTasks()[i].getTitle()
+    );
+    const taskDate = document.createElement("div");
+    const taskDateTxt = document.createTextNode(
+      formatDate(
+        taskCategoryLibrary[taskCategoryIndex].getTasks()[i].getDueDate()
+      )
+    );
+
+    // add attributes
+    taskCardContainer.setAttribute("class", "task-card-container");
+    taskCardContainer.classList.add("task-card-container", i);
+    completeIconContainer.setAttribute("class", "complete-icon-container");
+    completeIcon.setAttribute("class", "complete-icon");
+    completeIcon.setAttribute("src", circleDark);
+    completeIcon.setAttribute("alt", "complete icon");
+    checkMarkImg.classList.add("check-mark", i);
+    checkMarkImg.setAttribute("src", checkMark);
+    checkMarkImg.setAttribute("alt", "check mark");
+    titleAndDateContainer.setAttribute("class", "title-and-date-container");
+    taskTitle.setAttribute("class", "task-title");
+    taskDate.setAttribute("class", "task-date");
+
+    // append elements to dom
+    taskCards.appendChild(taskCardContainer);
+    taskCardContainer.appendChild(completeIconContainer);
+    completeIconContainer.appendChild(completeIcon);
+    completeIconContainer.appendChild(checkMarkImg);
+    taskCardContainer.appendChild(titleAndDateContainer);
+    titleAndDateContainer.appendChild(taskTitle);
+    taskTitle.appendChild(taskTitleTxt);
+    titleAndDateContainer.appendChild(taskDate);
+    taskDate.appendChild(taskDateTxt);
+  }
+}
+
+// CompleteTask function
+function completeTask(taskIndex) {
+  const checkMark = document.getElementsByClassName(`check-mark ${taskIndex}`);
+  checkMark[0].style.visibility = "visible";
+  checkMark[0].style.opacity = "1";
+}
+
+// removeTaskCategoryContentTaskCards function
+function removeTaskCategoryContentTaskCards() {
+  const taskCards = document.querySelector(".task-cards");
+  while (taskCards.firstChild) {
+    taskCards.removeChild(taskCards.lastChild);
+  }
+}
+
 // Highlight selected task category function
 function highlightSelectedTaskCategory(selectedElementClassIndex) {
   const selectedTaskCategory = document.getElementsByClassName(
@@ -290,7 +364,7 @@ function clearTaskCategoryContent() {
 }
 
 // Modal window function
-function buildTaskForm() {
+function buildTaskForm(taskCategoryIndex, taskIndex) {
   // declare elements
   const body = document.querySelector("body");
   const overlay = document.createElement("div");
@@ -315,7 +389,12 @@ function buildTaskForm() {
   const taskCategoriesSelectionLabel = document.createElement("label");
   const taskCategoriesSelectionLabelTxt =
     document.createTextNode("TASK CATEGORY:");
-  const taskCategoriesSelectionSelect = document.createElement("select");
+  const taskCategoriesSelectionSelect = document.createElement("select"); /* */
+  const taskCategories1Option = document.createElement("option");
+  const taskCategories2Option = document.createElement("option");
+  const taskCategories3Option = document.createElement("option");
+  const taskCategories4Option = document.createElement("option");
+  const taskCategories5Option = document.createElement("option");
   const column2Option2 = document.createElement("div");
   const dueDateSelectionLabel = document.createElement("label");
   const dueDateSelectionLabelTxt = document.createTextNode("DUE DATE:");
@@ -324,6 +403,8 @@ function buildTaskForm() {
   const priorityLabel = document.createElement("label");
   const priorityLabelTxt = document.createTextNode("PRIORITY:");
   const prioritySelect = document.createElement("select");
+  const priorityDefaultOption = document.createElement("option");
+  const priorityDefaultOptionTxt = document.createTextNode(" ");
   const priority1Option = document.createElement("option");
   const priority1OptionTxt = document.createTextNode("Priority 1");
   const priority2Option = document.createElement("option");
@@ -351,12 +432,11 @@ function buildTaskForm() {
   form.setAttribute("method", "post");
   form.setAttribute("id", "form");
   formColumn1.setAttribute("class", "form-column-1");
-  taskTitle.setAttribute("class", "task-title");
+  taskTitle.setAttribute("class", "task-title-container");
   taskTitleLabel.setAttribute("for", "task-title");
   taskTitleInput.setAttribute("type", "text");
   taskTitleInput.setAttribute("id", "task-title");
   taskTitleInput.setAttribute("required", "");
-  taskTitleInput.setAttribute("maxlength", "30");
   description.setAttribute("class", "description");
   descriptionLabel.setAttribute("for", "description");
   descriptionTextArea.setAttribute("name", "description");
@@ -371,17 +451,22 @@ function buildTaskForm() {
   taskCategoriesSelectionSelect.setAttribute("name", "task-categories");
   column2Option2.setAttribute("class", "column-2-option");
   dueDateSelectionLabel.setAttribute("for", "due-date-selection");
-  dueDateSelectionInput.setAttribute("type", "date");
+  dueDateSelectionInput.setAttribute("type", "text");
+  dueDateSelectionInput.setAttribute("onfocus", "(this.type='date')");
+  dueDateSelectionInput.setAttribute("onblur", "(this.type='text')");
+  dueDateSelectionInput.setAttribute("placeholder", "yyyy-mm-dd");
   dueDateSelectionInput.setAttribute("id", "due-date-selection");
   dueDateSelectionInput.setAttribute("name", "due-date-selection");
   column2Option3.setAttribute("class", "column-2-option");
   priorityLabel.setAttribute("for", "priority");
   prioritySelect.setAttribute("id", "priority");
   prioritySelect.setAttribute("name", "priority");
-  priority1Option.setAttribute("value", "priority-1");
-  priority2Option.setAttribute("value", "priority-2");
-  priority3Option.setAttribute("value", "priority-3");
-  priority4Option.setAttribute("value", "priority-4");
+  priorityDefaultOption.setAttribute("value", " ");
+  priorityDefaultOption.setAttribute("selected", "");
+  priority1Option.setAttribute("value", "Priority 1");
+  priority2Option.setAttribute("value", "Priority 2");
+  priority3Option.setAttribute("value", "Priority 3");
+  priority4Option.setAttribute("value", "Priority 4");
   submitButton.setAttribute("type", "submit");
   submitButton.setAttribute("id", "submit");
   submitButton.setAttribute("form", "form");
@@ -417,6 +502,8 @@ function buildTaskForm() {
   column2Option3.appendChild(priorityLabel);
   priorityLabel.appendChild(priorityLabelTxt);
   column2Option3.appendChild(prioritySelect);
+  prioritySelect.appendChild(priorityDefaultOption);
+  priorityDefaultOption.appendChild(priorityDefaultOptionTxt);
   prioritySelect.appendChild(priority1Option);
   priority1Option.appendChild(priority1OptionTxt);
   prioritySelect.appendChild(priority2Option);
@@ -433,6 +520,109 @@ function buildTaskForm() {
   isBlurredElements.forEach((isBlurredElement) => {
     isBlurredElement.style.filter = "blur(5px)";
   });
+
+  // Add task category options to form drop down menu
+  if (taskCategoryLibrary[0]) {
+    taskCategories1Option.textContent = taskCategoryLibrary[0].getTitle();
+    taskCategories1Option.setAttribute(
+      "value",
+      `${taskCategoryLibrary[0].getTitle()}0`
+    );
+    taskCategoriesSelectionSelect.appendChild(taskCategories1Option);
+  }
+  if (taskCategoryLibrary[1]) {
+    taskCategories2Option.textContent = taskCategoryLibrary[1].getTitle();
+    taskCategories2Option.setAttribute(
+      "value",
+      `${taskCategoryLibrary[1].getTitle()}1`
+    );
+    taskCategoriesSelectionSelect.appendChild(taskCategories2Option);
+  }
+  if (taskCategoryLibrary[2]) {
+    taskCategories3Option.textContent = taskCategoryLibrary[2].getTitle();
+    taskCategories3Option.setAttribute(
+      "value",
+      `${taskCategoryLibrary[2].getTitle()}2`
+    );
+    taskCategoriesSelectionSelect.appendChild(taskCategories3Option);
+  }
+  if (taskCategoryLibrary[3]) {
+    taskCategories4Option.textContent = taskCategoryLibrary[3].getTitle();
+    taskCategories4Option.setAttribute(
+      "value",
+      `${taskCategoryLibrary[3].getTitle()}3`
+    );
+    taskCategoriesSelectionSelect.appendChild(taskCategories4Option);
+  }
+  if (taskCategoryLibrary[4]) {
+    taskCategories5Option.textContent = taskCategoryLibrary[4].getTitle();
+    taskCategories5Option.setAttribute(
+      "value",
+      `${taskCategoryLibrary[4].getTitle()}4`
+    );
+    taskCategoriesSelectionSelect.appendChild(taskCategories5Option);
+  }
+
+  // Default values for task category drop down menu
+  for (let i = 0; i < taskCategoriesSelectionSelect.options.length; i++) {
+    // Remove selected task category as the default value
+    if (taskCategoriesSelectionSelect.options[i].hasAttribute("selected")) {
+      console.log(taskCategoriesSelectionSelect.options[i]);
+      taskCategoriesSelectionSelect.options[i].removeAttribute("selected");
+    }
+  }
+
+  for (let i = 0; i < taskCategoriesSelectionSelect.options.length; i++) {
+    // Make selected task category the default form value
+    if (i === findTaskCategoryIndexIsSelected()) {
+      taskCategoriesSelectionSelect.options[i].setAttribute("selected", "");
+    }
+  }
+
+  // Rest of default form values for when editing task
+  if (taskCategoryIndex !== undefined && taskIndex !== undefined) {
+    // Task title value
+    let taskTitleInputValue = taskCategoryLibrary[taskCategoryIndex]
+      .getTasks()
+      [taskIndex].getTitle();
+
+    taskTitleInput.setAttribute("value", taskTitleInputValue);
+
+    // Description title value
+    let descriptionValue = taskCategoryLibrary[taskCategoryIndex]
+      .getTasks()
+      [taskIndex].getDescription();
+
+    descriptionTextArea.textContent = descriptionValue;
+
+    // Due date value
+    let dueDateValue = taskCategoryLibrary[taskCategoryIndex]
+      .getTasks()
+      [taskIndex].getDueDate();
+
+    dueDateSelectionInput.setAttribute("value", dueDateValue);
+    dueDateSelectionInput.setAttribute("onfocus", "(this.type='date')");
+    dueDateSelectionInput.setAttribute("onblur", "(this.type='text')");
+
+    // Reassign default value for priority drop down menu
+    let priorityValue = taskCategoryLibrary[taskCategoryIndex]
+      .getTasks()
+      [taskIndex].getPriority();
+
+    for (let i = 0; i < prioritySelect.options.length; i++) {
+      // Remove Selected attribute from selected priority option
+      if (prioritySelect.options[i].hasAttribute("selected")) {
+        prioritySelect.options[i].removeAttribute("selected");
+      }
+    }
+
+    for (let i = 0; i < prioritySelect.options.length; i++) {
+      // Add Selected attribute to selected priority option
+      if (priorityValue === prioritySelect.options[i].value) {
+        prioritySelect.options[i].setAttribute("selected", "");
+      }
+    }
+  }
 }
 
 // Remove task form function
@@ -468,6 +658,9 @@ export {
   displayTaskCategories,
   clearTaskCategories,
   taskCategoryContent,
+  taskCategoryContentTaskCards,
+  completeTask,
+  removeTaskCategoryContentTaskCards,
   highlightSelectedTaskCategory,
   removeHighlightTaskCategories,
   clearTaskCategoryContent,

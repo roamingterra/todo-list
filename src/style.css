@@ -61,7 +61,7 @@ textarea {
   font-size: 1rem;
 }
 
-.task-title {
+.task-title-container {
   display: flex;
   flex-direction: column;
 }
@@ -75,6 +75,7 @@ textarea {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 127.602px;
 }
 
 .column-2-option {
@@ -129,7 +130,7 @@ body {
 
 #container {
   display: grid;
-  grid-template-rows: 84px 1fr;
+  grid-template-rows: 84px calc(100vh - 84px);
   grid-template-columns: 290px 1fr;
   height: 100%;
   width: 100%;
@@ -141,12 +142,14 @@ body {
   grid-column: 1 / 3;
   grid-row: 1 / 2;
   display: flex;
+  position: fixed;
+  box-sizing: border-box;
   justify-content: space-between;
   padding: 20px;
-  height: fit-content;
   z-index: 3;
   box-shadow: 0 4px 2px rgba(0, 0, 0, 0.16);
   background-color: white;
+  width: 100vw;
 }
 
 .top-bar-left {
@@ -188,7 +191,6 @@ body {
 
 /* Side bar */
 #side-bar {
-  position: relative;
   grid-row: 2 / 3;
   grid-column: 1 / 2;
   display: flex;
@@ -307,14 +309,11 @@ button.add-task-category {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
   background-color: #f0eef1;
+  overflow: auto;
 }
 
 .task-category-content {
-  /* height: 70%; */
   background-color: #f0eef1;
-  overflow: auto;
-  /* overflow-y: scroll;
-  overflow-x: scroll; */
 }
 
 .add-task-button-wrapper {
@@ -345,11 +344,80 @@ button.add-task-button:active {
 
 .task-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 200px);
+  grid-template-columns: repeat(auto-fit, 300px);
   justify-content: center;
   row-gap: 50px;
   column-gap: 100px;
   padding: 20px 50px 20px 50px;
+}
+
+.task-card-container {
+  display: flex;
+  gap: 10px;
+  color: black;
+  background-color: white;
+  font-size: 2rem;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.16);
+  height: 104px;
+  cursor: pointer;
+}
+
+.complete-icon-container {
+  position: relative;
+  width: 1.5rem;
+}
+
+.complete-icon {
+  position: absolute;
+  width: 1.5rem;
+  top: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.check-mark {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  width: 1.5rem;
+  top: -2px;
+  left: 3px;
+  transition: opacity 200ms;
+  z-index: 1;
+}
+
+.complete-icon:hover + .check-mark {
+  visibility: visible;
+  opacity: 0.3;
+}
+
+.title-and-date-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-title {
+  /* display: inline-block; */
+  display: -webkit-box;
+
+  width: 240px; /* */
+  height: 75px;
+  /* word-wrap: break-word; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* white-space: nowrap; */
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-align: center;
+}
+
+.task-date {
+  font-size: 1rem;
+  text-align: center;
 }
 
 /* No side bar if page loads while window size is small*/
