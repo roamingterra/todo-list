@@ -186,7 +186,7 @@ window.addEventListener("click", (event) => {
   }
 });
 
-// Edit task & Submit form event listeners
+// Edit task, delete task, and submit form  event listeners
 window.addEventListener("click", (event) => {
   if (
     event.target.closest(".task-card-container") &&
@@ -196,6 +196,14 @@ window.addEventListener("click", (event) => {
     const taskIndex = event.target.closest(".task-card-container").classList[1];
     // Pull up edit task window
     buildTaskForm(taskCategoryIndex, taskIndex);
+
+    const deleteTask = document.querySelector("#delete");
+    deleteTask.addEventListener("click", () => {
+      taskCategoryLibrary[taskCategoryIndex].removeTask(taskIndex);
+      removeTaskForm();
+      removeTaskCategoryContentTaskCards();
+      taskCategoryContentTaskCards(findTaskCategoryIndexIsSelected());
+    });
 
     const form = document.getElementById("form");
     form.addEventListener("submit", (event) => {
