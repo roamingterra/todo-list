@@ -8,7 +8,6 @@ import {
   taskCategoryContent,
   taskCategoryContentTaskCards,
   completeTask,
-  removeTaskCategoryContent,
   removeTaskCategoryContentTaskCards,
   removeMainContent,
   highlightSelectedTaskCategory,
@@ -28,9 +27,6 @@ import {
   taskCategoryFactory,
   taskFactory,
   checkTaskCategoryLibraryFull,
-  editTaskCategoryName,
-  editTaskCategoryIconColor,
-  removeTaskCategory,
   addNewTaskCategory,
   SelectTaskCategory,
   removeTaskCategorySelection,
@@ -93,9 +89,13 @@ const allTaskCategories = document.querySelectorAll(".new-task-categories");
 allTaskCategories.forEach((taskCategory) => {
   taskCategory.addEventListener("input", (event) => {
     if (event.target.classList[0] === "task-category-name") {
-      editTaskCategoryName(event);
+      taskCategoryLibrary[event.target.classList[1]].setTitle(
+        event.target.textContent
+      );
     } else if (event.target.classList[0] === "task-category-icon-color") {
-      editTaskCategoryIconColor(event);
+      taskCategoryLibrary[event.target.classList[1]].setColor(
+        event.target.value
+      );
     }
   });
 });
@@ -109,7 +109,7 @@ allTaskCategories.forEach((taskCategory) => {
         clearTaskCategoryContent();
       }
 
-      removeTaskCategory(event);
+      taskCategoryLibrary.splice(event.target.classList[1], 1);
       clearTaskCategories();
       displayTaskCategories();
 
@@ -328,9 +328,7 @@ window.addEventListener("click", (event) => {
     // Find where task is located in which task category array and delete it /* */
     const taskCategoryIndex = todayLibrary[taskIndexToday].getCategory();
     const taskIndex = todayLibrary[taskIndexToday].getTaskIndex();
-
     taskCategoryLibrary[taskCategoryIndex].removeTask(taskIndex);
-
     updateTaskIndicesOfTaskCategory(taskCategoryIndex);
 
     // Show with a check mark that the task has been completed
@@ -361,7 +359,6 @@ window.addEventListener("click", (event) => {
     const taskIndex = lateLibrary[taskIndexLate].getTaskIndex();
 
     taskCategoryLibrary[taskCategoryIndex].removeTask(taskIndex);
-
     updateTaskIndicesOfTaskCategory(taskCategoryIndex);
 
     // Show with a check mark that the task has been completed

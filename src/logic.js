@@ -82,28 +82,15 @@ function taskFactory(
 
 // Array that holds all task category objects
 const taskCategoryLibrary = [];
+const taskCategoryLibraryStringified = localStorage.setItem(
+  "taskCategoryLibrary",
+  JSON.stringify(taskCategoryLibrary)
+);
 
 // Function to check if there are five task category objects in array
 function checkTaskCategoryLibraryFull() {
   if (taskCategoryLibrary.length === 5) return true;
   else return false;
-}
-
-// Edit task category name function
-function editTaskCategoryName(event) {
-  taskCategoryLibrary[event.target.classList[1]].setTitle(
-    event.target.textContent
-  );
-}
-
-// Edit task category icon color function
-function editTaskCategoryIconColor(event) {
-  taskCategoryLibrary[event.target.classList[1]].setColor(event.target.value);
-}
-
-// Remove task category function
-function removeTaskCategory(event) {
-  taskCategoryLibrary.splice(event.target.classList[1], 1);
 }
 
 // Add new task category function
@@ -297,12 +284,10 @@ const getDirectionOfWindowResize = (() => {
 
 export {
   taskCategoryLibrary,
+  taskCategoryLibraryStringified,
   taskCategoryFactory,
   taskFactory,
   checkTaskCategoryLibraryFull,
-  editTaskCategoryName,
-  editTaskCategoryIconColor,
-  removeTaskCategory,
   addNewTaskCategory,
   SelectTaskCategory,
   removeTaskCategorySelection,

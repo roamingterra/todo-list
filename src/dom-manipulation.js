@@ -1,6 +1,7 @@
 // Imports
 import {
   taskCategoryLibrary,
+  taskCategoryLibraryStringified,
   formatDate,
   findTaskCategoryIndexIsSelected,
   todayLibrary,
@@ -16,6 +17,10 @@ import trashCanDark from "./images/trash-can-dark.svg";
 import closeDark from "./images/close-dark.svg";
 import circleDark from "./images/circle-outline.svg";
 import checkMark from "./images/check-mark-icon.png";
+
+const taskCategoryLibraryParsed = JSON.parse(
+  localStorage.getItem("taskCategoryLibrary")
+);
 
 // dashboard function (for loading the side and top bars)
 function dashboard() {
