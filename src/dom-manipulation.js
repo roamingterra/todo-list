@@ -3,6 +3,8 @@ import {
   taskCategoryLibrary,
   formatDate,
   findTaskCategoryIndexIsSelected,
+  todayLibrary,
+  lateLibrary,
 } from "./logic";
 import tallyMark3 from "./images/tally-mark-3.png";
 import sunHollow from "./images/sun-hollow.svg";
@@ -331,11 +333,29 @@ function completeTask(taskIndex) {
   checkMark[0].style.opacity = "1";
 }
 
+// Remove task category content function
+function removeTaskCategoryContent() {
+  const taskCategoryContent = document.querySelector(".task-category-content");
+  while (taskCategoryContent.firstChild) {
+    taskCategoryContent.removeChild(taskCategoryContent.lastChild);
+  }
+}
+
 // removeTaskCategoryContentTaskCards function
 function removeTaskCategoryContentTaskCards() {
   const taskCards = document.querySelector(".task-cards");
   while (taskCards.firstChild) {
     taskCards.removeChild(taskCards.lastChild);
+  }
+}
+
+// removeTodayLateContent function
+function removeMainContent() {
+  const mainContent = document.querySelector("#main-content");
+  if (mainContent.firstChild) {
+    while (mainContent.firstChild) {
+      mainContent.removeChild(mainContent.lastChild);
+    }
   }
 }
 
@@ -404,7 +424,7 @@ function buildTaskForm(taskCategoryIndex, taskIndex) {
   const priorityLabelTxt = document.createTextNode("PRIORITY:");
   const prioritySelect = document.createElement("select");
   const priorityDefaultOption = document.createElement("option");
-  const priorityDefaultOptionTxt = document.createTextNode(" ");
+  const priorityDefaultOptionTxt = document.createTextNode("");
   const priority1Option = document.createElement("option");
   const priority1OptionTxt = document.createTextNode("Priority 1");
   const priority2Option = document.createElement("option");
@@ -461,7 +481,10 @@ function buildTaskForm(taskCategoryIndex, taskIndex) {
   priorityLabel.setAttribute("for", "priority");
   prioritySelect.setAttribute("id", "priority");
   prioritySelect.setAttribute("name", "priority");
-  priorityDefaultOption.setAttribute("value", " ");
+  priorityDefaultOption.setAttribute(
+    "value",
+    "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"
+  );
   priorityDefaultOption.setAttribute("selected", "");
   priority1Option.setAttribute("value", "Priority 1");
   priority2Option.setAttribute("value", "Priority 2");
@@ -642,14 +665,212 @@ function removeTaskForm() {
 }
 
 // today function (for loading the today tab which contains all tasks that are due today)
-// declare elements
-// add attributes
-// append elements to dom
+function todayContent() {
+  for (let i = 0; i < todayLibrary.length; i++) {
+    // declare elements
+    const mainContent = document.querySelector("#main-content");
+    const todayLateContent = document.createElement("div");
+    const todayTaskContainer = document.createElement("div");
+    const todayTaskContainerFirstHalf = document.createElement("div");
+    const completeIconContainer = document.createElement("div");
+    const completeIcon = document.createElement("img");
+    const checkMarkImg = document.createElement("img");
+    const todayTaskContainerSecondHalf = document.createElement("div");
+    const taskNameContainer = document.createElement("div");
+    const taskName = document.createElement("div");
+    const taskNameTxt = document.createTextNode(todayLibrary[i].getTitle());
+    const restOfInformation = document.createElement("div");
+    const priorityContainer = document.createElement("div");
+    const priority = document.createElement("div");
+    const priorityTxt = document.createTextNode(todayLibrary[i].getPriority());
+    const taskCategoryContainer = document.createElement("div");
+    const taskCategoryColor = document.createElement("div");
+    const taskCategory = document.createElement("div");
+    const taskCategoryTxt = document.createTextNode(
+      todayLibrary[i].getCategoryTitle()
+    );
+
+    // add attributes
+    todayLateContent.setAttribute("class", "today-content");
+    todayTaskContainer.classList.add("today-task-container", i);
+    todayTaskContainerFirstHalf.setAttribute(
+      "class",
+      "today-task-container-first-half"
+    );
+    completeIconContainer.setAttribute(
+      "class",
+      "today-complete-icon-container"
+    );
+    completeIcon.setAttribute("class", "today-complete-icon");
+    completeIcon.setAttribute("src", circleDark);
+    completeIcon.setAttribute("alt", "Complete icon");
+    checkMarkImg.classList.add("today-check-mark", i);
+    checkMarkImg.setAttribute("src", checkMark);
+    checkMarkImg.setAttribute("alt", "check mark");
+    todayTaskContainerSecondHalf.setAttribute(
+      "class",
+      "today-task-container-second-half"
+    );
+    taskNameContainer.setAttribute("class", "today-task-name-container");
+    taskName.setAttribute("class", "today-task-name");
+    restOfInformation.setAttribute("class", "today-rest-of-information");
+    priorityContainer.setAttribute("class", "today-priority-container");
+    priority.setAttribute("class", "today-priority");
+    taskCategoryContainer.setAttribute(
+      "class",
+      "today-task-category-container"
+    );
+    taskCategoryColor.setAttribute("class", "today-task-category-color");
+    taskCategory.setAttribute("class", "today-task-category");
+
+    // append elements to dom
+    mainContent.appendChild(todayLateContent);
+    todayLateContent.appendChild(todayTaskContainer);
+    todayTaskContainer.appendChild(todayTaskContainerFirstHalf);
+    todayTaskContainerFirstHalf.appendChild(completeIconContainer);
+    completeIconContainer.appendChild(completeIcon);
+    completeIconContainer.appendChild(checkMarkImg);
+    todayTaskContainer.appendChild(todayTaskContainerSecondHalf);
+    todayTaskContainerSecondHalf.appendChild(taskNameContainer);
+    taskNameContainer.appendChild(taskName);
+    taskName.appendChild(taskNameTxt);
+    todayTaskContainerSecondHalf.appendChild(restOfInformation);
+    restOfInformation.appendChild(priorityContainer);
+    priorityContainer.appendChild(priority);
+    priority.appendChild(priorityTxt);
+    restOfInformation.appendChild(taskCategoryContainer);
+    taskCategoryContainer.appendChild(taskCategoryColor);
+    taskCategoryContainer.appendChild(taskCategory);
+    taskCategory.appendChild(taskCategoryTxt);
+
+    // Style elements
+    taskCategoryColor.style.backgroundColor =
+      taskCategoryLibrary[todayLibrary[i].getCategory()].getColor();
+  }
+}
 
 // late function (for loading the late tab which contains all tasks that were due before the present date and have not been completed yet)
-// declare elements
-// add attributes
-// append elements to dom
+function lateContent() {
+  for (let i = 0; i < lateLibrary.length; i++) {
+    // declare elements
+    const mainContent = document.querySelector("#main-content");
+    const todayLateContent = document.createElement("div");
+    const lateTaskContainer = document.createElement("div");
+    const lateTaskContainerFirstHalf = document.createElement("div");
+    const completeIconContainer = document.createElement("div");
+    const completeIcon = document.createElement("img");
+    const checkMarkImg = document.createElement("img");
+    const lateTaskContainerSecondHalf = document.createElement("div");
+    const taskNameContainer = document.createElement("div");
+    const taskName = document.createElement("div");
+    const taskNameTxt = document.createTextNode(lateLibrary[i].getTitle());
+    const restOfInformation = document.createElement("div");
+    const priorityContainer = document.createElement("div");
+    const priority = document.createElement("div");
+    const priorityTxt = document.createTextNode(lateLibrary[i].getPriority());
+    const dateContainer = document.createElement("div");
+    const date = document.createElement("div");
+    const dateTxt = document.createTextNode(
+      formatDate(lateLibrary[i].getDueDate())
+    );
+    const taskCategoryContainer = document.createElement("div");
+    const taskCategoryColor = document.createElement("div");
+    const taskCategory = document.createElement("div");
+    const taskCategoryTxt = document.createTextNode(
+      lateLibrary[i].getCategoryTitle()
+    );
+
+    // add attributes
+    todayLateContent.setAttribute("class", "late-content");
+    lateTaskContainer.classList.add("late-task-container", i);
+    lateTaskContainerFirstHalf.setAttribute(
+      "class",
+      "late-task-container-first-half"
+    );
+    completeIconContainer.setAttribute("class", "late-complete-icon-container");
+    completeIcon.setAttribute("class", "late-complete-icon");
+    completeIcon.setAttribute("src", circleDark);
+    completeIcon.setAttribute("alt", "Complete icon");
+    checkMarkImg.classList.add("late-check-mark", i);
+    checkMarkImg.setAttribute("src", checkMark);
+    checkMarkImg.setAttribute("alt", "check mark");
+    lateTaskContainerSecondHalf.setAttribute(
+      "class",
+      "late-task-container-second-half"
+    );
+    taskNameContainer.setAttribute("class", "late-task-name-container");
+    taskName.setAttribute("class", "late-task-name");
+    restOfInformation.setAttribute("class", "late-rest-of-information");
+    priorityContainer.setAttribute("class", "late-priority-container");
+    priority.setAttribute("class", "late-priority");
+    dateContainer.setAttribute("class", "late-date-container");
+    date.setAttribute("class", "late-date");
+    taskCategoryContainer.setAttribute("class", "late-task-category-container");
+    taskCategoryColor.setAttribute("class", "late-task-category-color");
+    taskCategory.setAttribute("class", "late-task-category");
+
+    // append elements to dom
+    mainContent.appendChild(todayLateContent);
+    todayLateContent.appendChild(lateTaskContainer);
+    lateTaskContainer.appendChild(lateTaskContainerFirstHalf);
+    lateTaskContainerFirstHalf.appendChild(completeIconContainer);
+    completeIconContainer.appendChild(completeIcon);
+    completeIconContainer.appendChild(checkMarkImg);
+    lateTaskContainer.appendChild(lateTaskContainerSecondHalf);
+    lateTaskContainerSecondHalf.appendChild(taskNameContainer);
+    taskNameContainer.appendChild(taskName);
+    taskName.appendChild(taskNameTxt);
+    lateTaskContainerSecondHalf.appendChild(restOfInformation);
+    restOfInformation.appendChild(priorityContainer);
+    priorityContainer.appendChild(priority);
+    priority.appendChild(priorityTxt);
+    restOfInformation.appendChild(dateContainer);
+    dateContainer.appendChild(date);
+    date.appendChild(dateTxt);
+    restOfInformation.appendChild(taskCategoryContainer);
+    taskCategoryContainer.appendChild(taskCategoryColor);
+    taskCategoryContainer.appendChild(taskCategory);
+    taskCategory.appendChild(taskCategoryTxt);
+
+    // Style elements
+    taskCategoryColor.style.backgroundColor =
+      taskCategoryLibrary[lateLibrary[i].getCategory()].getColor();
+  }
+}
+
+// Highlight Today or Late selection function
+function highlightTodayOrLateSelection(selection) {
+  // const selectedTaskCategory = document.getElementsByClassName(
+  //     `task-category ${selectedElementClassIndex}`
+  //   );
+  selection.style.backgroundColor = "#f0eef1";
+}
+
+// Remove highlight from Today or Tomorrow selection function
+function removeHighlightTodayLateSelection() {
+  const today = document.querySelector(".today");
+  const late = document.querySelector(".late");
+  today.style.backgroundColor = "white";
+  late.style.backgroundColor = "white";
+}
+
+// CompleteTaskTodaySelection function
+function completeTaskToday(taskIndex) {
+  const checkMarkToday = document.getElementsByClassName(
+    `today-check-mark ${taskIndex}`
+  );
+  checkMarkToday[0].style.visibility = "visible";
+  checkMarkToday[0].style.opacity = "1";
+}
+
+// CompleteTaskTodayLateSelection function
+function completeTaskLate(taskIndex) {
+  const checkMarkLate = document.getElementsByClassName(
+    `late-check-mark ${taskIndex}`
+  );
+  checkMarkLate[0].style.visibility = "visible";
+  checkMarkLate[0].style.opacity = "1";
+}
 
 export {
   dashboard,
@@ -660,10 +881,18 @@ export {
   taskCategoryContent,
   taskCategoryContentTaskCards,
   completeTask,
+  removeTaskCategoryContent,
   removeTaskCategoryContentTaskCards,
+  removeMainContent,
   highlightSelectedTaskCategory,
   removeHighlightTaskCategories,
   clearTaskCategoryContent,
   buildTaskForm,
   removeTaskForm,
+  todayContent,
+  lateContent,
+  highlightTodayOrLateSelection,
+  removeHighlightTodayLateSelection,
+  completeTaskToday,
+  completeTaskLate,
 };

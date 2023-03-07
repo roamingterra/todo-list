@@ -41,29 +41,42 @@ function taskCategoryFactory(title, color) {
 //             priority (received from user form)
 // methods: getTitle, getDescription, getCategory, getDueDate, getPriority
 //          setTitle, setDescription, setCategory, setDueDate, setPriority
-function taskFactory(title, description, category, dueDate, priority) {
+function taskFactory(
+  title,
+  description,
+  category,
+  dueDate,
+  priority,
+  taskIndex
+) {
   const getTitle = () => title;
   const getDescription = () => description;
   const getCategory = () => category;
+  const getCategoryTitle = () => taskCategoryLibrary[getCategory()].getTitle();
   const getDueDate = () => dueDate;
   const getPriority = () => priority;
+  const getTaskIndex = () => taskIndex;
   const setTitle = (newTitle) => (title = newTitle);
   const setDescription = (newDescription) => (description = newDescription);
   const setCategory = (newCategory) => (category = newCategory);
   const setDueDate = (newDueDate) => (dueDate = newDueDate);
   const setPriority = (newPriority) => (priority = newPriority);
+  const setTaskIndex = (newTaskIndex) => (taskIndex = newTaskIndex);
 
   return {
     getTitle,
     getDescription,
     getCategory,
+    getCategoryTitle,
     getDueDate,
     getPriority,
+    getTaskIndex,
     setTitle,
     setDescription,
     setCategory,
     setDueDate,
     setPriority,
+    setTaskIndex,
   };
 }
 
@@ -146,6 +159,17 @@ function moveTaskNewTaskCategory(
   taskCategoryLibrary[taskCategoryIndex].removeTask(taskIndex);
 }
 
+// update indices of tasks of a task category
+function updateTaskIndicesOfTaskCategory(taskCategoryIndex) {
+  for (
+    let i = 0;
+    i < taskCategoryLibrary[taskCategoryIndex].getTasks().length;
+    i++
+  ) {
+    taskCategoryLibrary[taskCategoryIndex].getTasks()[i].setTaskIndex(i);
+  }
+}
+
 // format date
 function formatDate(date) {
   const today = format(new Date(), "yyyy-MM-dd");
@@ -218,7 +242,7 @@ function sortTasksToday() {
 //       placed into either the today array, or the late array.
 function sortTasksLate() {
   // Clear lateLibrary array
-  todayLibrary.length = 0;
+  lateLibrary.length = 0;
   // Create new today date
   const today = format(new Date(), "yyyy-MM-dd");
   // Iterate through each task category and each task and determine which ones are late,
@@ -237,8 +261,10 @@ function sortTasksLate() {
       if (lateLibrary[i].getDueDate() > lateLibrary[j].getDueDate()) {
         [lateLibrary[i], lateLibrary[j]] = [lateLibrary[j], lateLibrary[i]];
       } else if (
-        lateLibrary[i].getDueDate() === lateLibrary[j].getDueDate() &&
-        lateLibrary[i].getPriority() > lateLibrary[j].getPriority()
+        (lateLibrary[i].getDueDate() === lateLibrary[j].getDueDate() &&
+          lateLibrary[i].getPriority() > lateLibrary[j].getPriority()) ||
+        (lateLibrary[i].getPriority() === "" &&
+          lateLibrary[j].getPriority() !== "")
       ) {
         [lateLibrary[i], lateLibrary[j]] = [lateLibrary[j], lateLibrary[i]];
       }
@@ -283,6 +309,7 @@ export {
   findTaskCategoryIndexIsSelected,
   returnIndexTaskCategoryValue,
   moveTaskNewTaskCategory,
+  updateTaskIndicesOfTaskCategory,
   formatDate,
   todayLibrary,
   lateLibrary,

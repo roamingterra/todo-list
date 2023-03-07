@@ -146,7 +146,7 @@ body {
   box-sizing: border-box;
   justify-content: space-between;
   padding: 20px;
-  z-index: 3;
+  z-index: 4;
   box-shadow: 0 4px 2px rgba(0, 0, 0, 0.16);
   background-color: white;
   width: 100vw;
@@ -182,7 +182,7 @@ body {
   text-align: justify;
   line-height: 25px;
   font-size: 1.25rem;
-  /* z-index: 100; */
+  /* z-index: 4; */
 }
 
 .info:hover .info-container {
@@ -198,7 +198,7 @@ body {
   gap: 20px;
   padding: 20px;
   font-size: 1.25rem;
-  z-index: 2;
+  z-index: 3;
   width: 250px;
   transition: padding-left 0.2s ease-in-out;
   background-color: white;
@@ -418,6 +418,74 @@ button.add-task-button:active {
 .task-date {
   font-size: 1rem;
   text-align: center;
+}
+
+/* Today/Late Content */
+.today-task-container,
+.late-task-container {
+  display: flex;
+  position: relative;
+  gap: 5px;
+  padding: 10px;
+  margin: 25px 100px;
+  border-style: solid;
+  border-color: rgb(195, 195, 195);
+  border-width: 2px 2px 0 2px;
+  background-color: white;
+  box-shadow: 0 4px 2px rgba(0, 0, 0, 0.16);
+}
+
+.today-complete-icon,
+.late-complete-icon {
+  position: absolute;
+  width: 1.5rem;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.today-check-mark,
+.late-check-mark {
+  position: relative;
+  visibility: hidden;
+  opacity: 0;
+  width: 1.5rem;
+  left: 2px;
+  bottom: 2px;
+  transition: opacity 200ms;
+  z-index: 1;
+}
+
+.today-complete-icon:hover + .today-check-mark,
+.late-complete-icon:hover + .late-check-mark {
+  visibility: visible;
+  opacity: 0.3;
+}
+
+.today-task-container-second-half,
+.late-task-container-second-half {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 10px;
+}
+
+.today-rest-of-information,
+.late-rest-of-information {
+  display: flex;
+  justify-content: space-between;
+}
+
+.today-task-category-container,
+.late-task-category-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.today-task-category-color,
+.late-task-category-color {
+  width: 15px;
+  height: 15px;
 }
 
 /* No side bar if page loads while window size is small*/

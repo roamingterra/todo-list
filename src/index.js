@@ -8,12 +8,20 @@ import {
   taskCategoryContent,
   taskCategoryContentTaskCards,
   completeTask,
+  removeTaskCategoryContent,
   removeTaskCategoryContentTaskCards,
+  removeMainContent,
   highlightSelectedTaskCategory,
   removeHighlightTaskCategories,
   clearTaskCategoryContent,
   buildTaskForm,
   removeTaskForm,
+  todayContent,
+  lateContent,
+  highlightTodayOrLateSelection,
+  removeHighlightTodayLateSelection,
+  completeTaskToday,
+  completeTaskLate,
 } from "./dom-manipulation.js";
 import {
   taskCategoryLibrary,
@@ -29,6 +37,7 @@ import {
   findTaskCategoryIndexIsSelected,
   returnIndexTaskCategoryValue,
   moveTaskNewTaskCategory,
+  updateTaskIndicesOfTaskCategory,
   todayLibrary,
   lateLibrary,
   sortTasksToday,
@@ -119,6 +128,7 @@ allTaskCategories.forEach((taskCategory) => {
       event.target.classList[0] === "task-category" ||
       event.target.classList[0] === "task-category-name"
     ) {
+      removeHighlightTodayLateSelection();
       removeHighlightTaskCategories();
       removeTaskCategorySelection();
       SelectTaskCategory(event.target.classList[1]);
@@ -151,13 +161,20 @@ window.addEventListener("click", (event) => {
 
       // Make new task object from user input using the constructor and push it to appropriate task category object
       taskCategoryIndex = returnIndexTaskCategoryValue(taskCategoryValue);
+      //   console.log(taskCategoryLibrary[taskCategoryIndex]);
+
+      let taskIndex = 0;
+      if (taskCategoryLibrary[taskCategoryIndex].getTasks().length !== 0) {
+        taskIndex = taskCategoryLibrary[taskCategoryIndex].getTasks().length;
+      }
 
       const newTask = taskFactory(
         title,
         description,
         taskCategoryIndex,
         dueDate,
-        priority
+        priority,
+        taskIndex
       );
 
       taskCategoryLibrary[taskCategoryIndex].setTask(newTask);
@@ -209,14 +226,24 @@ window.addEventListener("click", (event) => {
         [taskIndex].setPriority(priority);
 
       const newTaskCategoryIndex =
-        returnIndexTaskCategoryValue(newTaskCategory);
+        +returnIndexTaskCategoryValue(newTaskCategory);
 
       if (taskCategoryIndex !== newTaskCategoryIndex) {
+        const newTaskIndex = taskCategoryLibrary[newTaskCategoryIndex].length;
+
+        // Update moving task's task category
+        taskCategoryLibrary[taskCategoryIndex]
+          .getTasks()
+          [taskIndex].setCategory(newTaskCategoryIndex);
+
         moveTaskNewTaskCategory(
           taskCategoryIndex,
           taskIndex,
           newTaskCategoryIndex
         );
+
+        updateTaskIndicesOfTaskCategory(taskCategoryIndex);
+        updateTaskIndicesOfTaskCategory(newTaskCategoryIndex);
       }
 
       removeTaskForm();
@@ -243,9 +270,12 @@ window.addEventListener("click", (event) => {
     taskCategoryLibrary[findTaskCategoryIndexIsSelected()].removeTask(
       taskIndex
     );
+
+    updateTaskIndicesOfTaskCategory(findTaskCategoryIndexIsSelected());
+
     // Show with a check mark that the task has been completed
     completeTask(taskIndex);
-    // Remove task only after task is shown to be complete for 500ms
+    // Update main content only after task is shown to be complete for 500ms
     setTimeout(function () {
       removeTaskCategoryContentTaskCards();
       taskCategoryContentTaskCards(findTaskCategoryIndexIsSelected());
@@ -255,16 +285,87 @@ window.addEventListener("click", (event) => {
 
 // Today selection event listener
 const today = document.querySelector(".today");
+const late = document.querySelector(".late");
 
-today.addEventListener("click", (event) => {
+today.addEventListener("click", () => {
+  removeTaskCategorySelection();
+  removeHighlightTaskCategories();
+  removeHighlightTodayLateSelection();
+  highlightTodayOrLateSelection(today);
   sortTasksToday();
-  console.log(todayLibrary);
+  removeMainContent();
+  todayContent();
 });
 
 // Late selection event listener
-const late = document.querySelector(".late");
-
-late.addEventListener("click", (event) => {
+late.addEventListener("click", () => {
+  removeTaskCategorySelection();
+  removeHighlightTaskCategories();
+  removeHighlightTodayLateSelection();
+  highlightTodayOrLateSelection(late);
   sortTasksLate();
-  for (let i = 0; i < lateLibrary.length; i++) {}
+  removeMainContent();
+  lateContent();
+});
+
+// Complete today task event listener
+window.addEventListener("click", (event) => {
+  if (
+    event.target.matches(".today-complete-icon") &&
+    event.target.closest(".today-task-container")
+  ) {
+    const taskIndexToday = event.target.closest(".today-task-container")
+      .classList[1];
+
+    // Find where task is located in which task category array and delete it /* */
+    const taskCategoryIndex = todayLibrary[taskIndexToday].getCategory();
+    const taskIndex = todayLibrary[taskIndexToday].getTaskIndex();
+
+    taskCategoryLibrary[taskCategoryIndex].removeTask(taskIndex);
+
+    updateTaskIndicesOfTaskCategory(taskCategoryIndex);
+
+    // Show with a check mark that the task has been completed
+    completeTaskToday(taskIndexToday);
+
+    // Remove task from today array
+    todayLibrary.splice(taskIndexToday, 1);
+
+    // Remove task only after task is shown to be complete for 500ms
+    setTimeout(function () {
+      removeMainContent();
+      todayContent();
+    }, 500);
+  }
+});
+
+// Complete late task event listener
+window.addEventListener("click", (event) => {
+  if (
+    event.target.matches(".late-complete-icon") &&
+    event.target.closest(".late-task-container")
+  ) {
+    const taskIndexLate = event.target.closest(".late-task-container")
+      .classList[1];
+
+    // Find where task is located in which task category array and delete it
+    const taskCategoryIndex = lateLibrary[taskIndexLate].getCategory();
+    const taskIndex = lateLibrary[taskIndexLate].getTaskIndex();
+
+    taskCategoryLibrary[taskCategoryIndex].removeTask(taskIndex);
+
+    updateTaskIndicesOfTaskCategory(taskCategoryIndex);
+
+    // Show with a check mark that the task has been completed
+    completeTaskLate(taskIndexLate);
+
+    // Remove task from late array
+    lateLibrary.splice(taskIndexLate, 1);
+
+    // Remove task only after task is shown to be complete for 500ms
+    setTimeout(function () {
+      removeMainContent();
+      lateContent();
+    }, 500);
+  }
 });
