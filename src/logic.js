@@ -361,7 +361,10 @@ function sortTasksLate() {
   // and place late tasks in the late array
   for (let i = 0; i < taskCategoryLibrary.length; i++) {
     for (let j = 0; j < taskCategoryLibrary[i].getTasks().length; j++) {
-      if (taskCategoryLibrary[i].getTasks()[j].getDueDate() < today) {
+      if (
+        taskCategoryLibrary[i].getTasks()[j].getDueDate() < today &&
+        taskCategoryLibrary[i].getTasks()[j].getDueDate() !== ""
+      ) {
         lateLibrary.push(taskCategoryLibrary[i].getTasks()[j]);
       }
     }
