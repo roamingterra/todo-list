@@ -3,6 +3,7 @@ import {
   dashboard,
   windowResizeSideBar,
   buttonSideBar,
+  changeTheme,
   displayTaskCategories,
   clearTaskCategories,
   taskCategoryContent,
@@ -74,6 +75,10 @@ const container = document.querySelector("#container");
 container.addEventListener("click", (event) => {
   buttonSideBar(event);
 });
+
+// Change theme event listener
+const changeThemeButton = document.querySelector(".dark-light-mode");
+changeThemeButton.addEventListener("click", changeTheme);
 
 // Add task category event listener
 const plusIcon = document.querySelector(".plus-icon");

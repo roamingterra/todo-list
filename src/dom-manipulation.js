@@ -193,6 +193,125 @@ function buttonSideBar(event) {
   }
 }
 
+// changeTheme function (changes UI to dark mode or light mode )
+function changeTheme() {
+  const styles = getComputedStyle(document.documentElement);
+  const mainContentColor = styles.getPropertyValue(
+    "--main-content-background-color"
+  );
+
+  if (mainContentColor.trim() === "#f0eef1") {
+    document.documentElement.style.setProperty(
+      "--container-background-color",
+      "#525252"
+    );
+    document.documentElement.style.setProperty(
+      "--main-content-background-color",
+      "black"
+    );
+    document.documentElement.style.setProperty(
+      "--form-background-color",
+      "#737373"
+    );
+    document.documentElement.style.setProperty("--label-font-color", "white");
+    document.documentElement.style.setProperty(
+      "--button-background-color",
+      "#525252"
+    );
+    document.documentElement.style.setProperty("--button-font-color", "white");
+    document.documentElement.style.setProperty(
+      "--button-hover-background-color",
+      "white"
+    );
+    document.documentElement.style.setProperty(
+      "--button-hover-font-color",
+      "black"
+    );
+    document.documentElement.style.setProperty(
+      "--button-active-background-color",
+      "#525252"
+    );
+    document.documentElement.style.setProperty(
+      "--button-active-font-color",
+      "white"
+    );
+    document.documentElement.style.setProperty("--box-shadow-color", "#a3a3a3");
+    document.documentElement.style.setProperty(
+      "--top-side-bar-background-color",
+      "#525252"
+    );
+    document.documentElement.style.setProperty(
+      "--info-bubble-background-color",
+      "#3f3f46"
+    );
+    document.documentElement.style.setProperty(
+      "--task-background-color",
+      "#525252"
+    );
+    document.documentElement.style.setProperty("--task-font-color", "white");
+    document.documentElement.style.setProperty(
+      "--selected-option-background-color",
+      "#737373"
+    );
+  } else if (mainContentColor.trim() === "black") {
+    document.documentElement.style.setProperty(
+      "--container-background-color",
+      "white"
+    );
+    document.documentElement.style.setProperty(
+      "--main-content-background-color",
+      "#f0eef1"
+    );
+    document.documentElement.style.setProperty(
+      "--form-background-color",
+      "#f0eef1"
+    );
+    document.documentElement.style.setProperty("--label-font-color", "black");
+    document.documentElement.style.setProperty(
+      "--button-background-color",
+      "white"
+    );
+    document.documentElement.style.setProperty("--button-font-color", "black");
+    document.documentElement.style.setProperty(
+      "--button-hover-background-color",
+      "rgb(195, 195, 195)"
+    );
+    document.documentElement.style.setProperty(
+      "--button-hover-font-color",
+      "white"
+    );
+    document.documentElement.style.setProperty(
+      "--button-active-background-color",
+      "white"
+    );
+    document.documentElement.style.setProperty(
+      "--button-active-font-color",
+      "rgb(195, 195, 195)"
+    );
+    document.documentElement.style.setProperty(
+      "--box-shadow-color",
+      "rgba(0, 0, 0, 0.16)"
+    );
+    document.documentElement.style.setProperty(
+      "--top-side-bar-background-color",
+      "white"
+    );
+    document.documentElement.style.setProperty(
+      "--info-bubble-background-color",
+      "black"
+    );
+    document.documentElement.style.setProperty(
+      "--task-background-color",
+      "white"
+    );
+    document.documentElement.style.setProperty("--task-font-color", "black");
+    document.documentElement.style.setProperty(
+      "--selected-option-background-color",
+      "rgb(229, 229, 229)"
+    );
+  }
+}
+
 // Display task categories in side bar function
 function displayTaskCategories() {
   for (let i = 0; i < taskCategoryLibrary.length; i++) {
@@ -357,15 +476,24 @@ function highlightSelectedTaskCategory(selectedElementClassIndex) {
   const selectedTaskCategory = document.getElementsByClassName(
     `task-category ${selectedElementClassIndex}`
   );
-  selectedTaskCategory[0].style.backgroundColor = "#f0eef1";
+
+  selectedTaskCategory[0].setAttribute("id", "selected");
+  // selectedTaskCategory[0].classList.add(".selected");
+  // selectedTaskCategory[0].style.backgroundColor = "#f0eef1";
 }
 
 // Remove highlight from task categories function
 function removeHighlightTaskCategories() {
   const newTaskCategories = document.querySelector(".new-task-categories");
   for (let i = 0; i < newTaskCategories.children.length; i++) {
-    if (newTaskCategories.children[i].style.backgroundColor !== "") {
-      newTaskCategories.children[i].style.backgroundColor = "white";
+    // if (newTaskCategories.children[i].style.backgroundColor !== "") {
+    //   newTaskCategories.children[i].style.backgroundColor = "white";
+    // }
+    if (newTaskCategories.children[i].classList.contains(".selected")) {
+      newTaskCategories.children[i].classList.remove(".selected");
+    }
+    if (newTaskCategories.children[i].getAttribute("id") !== null) {
+      newTaskCategories.children[i].removeAttribute("id");
     }
   }
 }
@@ -833,15 +961,28 @@ function lateContent() {
 
 // Highlight Today or Late selection function
 function highlightTodayOrLateSelection(selection) {
-  selection.style.backgroundColor = "#f0eef1";
+  // selection.style.backgroundColor = "#f0eef1";
+
+  selection.classList.add(".selected");
+  selection.setAttribute("id", "selected");
 }
 
 // Remove highlight from Today or Tomorrow selection function
 function removeHighlightTodayLateSelection() {
-  const today = document.querySelector(".today");
-  const late = document.querySelector(".late");
-  today.style.backgroundColor = "white";
-  late.style.backgroundColor = "white";
+  // const today = document.querySelector(".today");
+  // const late = document.querySelector(".late");
+  // today.style.backgroundColor = "white";
+  // late.style.backgroundColor = "white";
+
+  const todayLate = document.querySelector(".today-late");
+  for (let i = 0; i < todayLate.children.length; i++) {
+    if (todayLate.children[i].classList.contains(".selected")) {
+      todayLate.children[i].classList.remove(".selected");
+    }
+    if (todayLate.children[i].getAttribute("id") !== null) {
+      todayLate.children[i].removeAttribute("id");
+    }
+  }
 }
 
 // CompleteTaskTodaySelection function
@@ -866,6 +1007,7 @@ export {
   dashboard,
   windowResizeSideBar,
   buttonSideBar,
+  changeTheme,
   displayTaskCategories,
   clearTaskCategories,
   taskCategoryContent,

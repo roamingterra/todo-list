@@ -3,6 +3,33 @@
   src: url(./fonts/Roboto-Medium.ttf);
 }
 
+:root {
+  --container-background-color: white;
+  --overlay-background-color: rgba(0, 0, 0, 0.649);
+  --form-background-color: #f0eef1;
+  --label-font-color: black;
+  --main-content-background-color: #f0eef1;
+  --dashboard-font-color: black;
+  --button-background-color: white;
+  --button-font-color: black;
+  --button-hover-background-color: rgb(195, 195, 195);
+  --button-hover-font-color: white;
+  --button-active-background-color: white;
+  --button-active-font-color: rgb(195, 195, 195);
+  --box-shadow-color: rgba(0, 0, 0, 0.16);
+  --top-side-bar-background-color: white;
+  --info-bubble-font-color: white;
+  --info-bubble-background-color: black;
+  --task-background-color: white;
+  --task-font-color: black;
+  --today-late-task-border-color: rgb(195, 195, 195);
+  --selected-option-background-color: rgb(229, 229, 229);
+}
+
+#container {
+  background-color: var(--container-background-color);
+}
+
 /* Form */
 #overlay {
   position: fixed;
@@ -10,7 +37,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.649);
+  background-color: var(--overlay-background-color);
   z-index: 4;
   display: flex;
   justify-content: center;
@@ -26,7 +53,7 @@
   height: 300px;
   z-index: 5;
   border-radius: 20px;
-  background-color: #f0eef1;
+  background-color: var(--form-background-color);
   backdrop-filter: blur(15px);
 }
 
@@ -83,23 +110,27 @@ textarea {
   flex-direction: column;
 }
 
+label {
+  color: var(--label-font-color);
+}
+
 #submit {
   border-radius: 50px;
   padding: 10px;
   font-family: "roboto-black";
   font-size: 1rem;
-  background-color: white;
-  color: #171717;
+  background-color: var(--button-background-color);
+  color: var(--button-font-color);
   border: 0;
 }
 #submit:hover {
-  background-color: rgb(195, 195, 195);
-  color: white;
+  background-color: var(--button-hover-background-color);
+  color: var(--button-hover-font-color);
 }
 
 #submit:active {
-  background-color: white;
-  color: rgb(195, 195, 195);
+  background-color: var(--button-active-background-color);
+  color: var(--button-active-font-color);
 }
 
 /* Hover animations */
@@ -147,8 +178,8 @@ body {
   justify-content: space-between;
   padding: 20px;
   z-index: 4;
-  box-shadow: 0 4px 2px rgba(0, 0, 0, 0.16);
-  background-color: white;
+  box-shadow: 0 4px 2px var(--box-shadow-color);
+  background-color: var(--top-side-bar-background-color);
   width: 100vw;
 }
 
@@ -174,15 +205,14 @@ body {
   position: absolute;
   top: 105px;
   right: 20px;
-  background-color: black;
-  color: white;
+  background-color: var(--info-bubble-background-color);
+  color: var(--info-bubble-font-color);
   width: 400px;
   padding: 20px;
   border-radius: 10px;
   text-align: justify;
   line-height: 25px;
   font-size: 1.25rem;
-  /* z-index: 4; */
 }
 
 .info:hover .info-container {
@@ -201,7 +231,7 @@ body {
   z-index: 3;
   width: 250px;
   transition: padding-left 0.2s ease-in-out;
-  background-color: white;
+  background-color: var(--top-side-bar-background-color);
 }
 
 .today-late {
@@ -215,6 +245,7 @@ body {
 .task-categories-header {
   display: flex;
   align-items: center;
+  color: var(--dashboard-font-color);
 }
 
 .today,
@@ -245,7 +276,7 @@ body {
 button.add-task-category {
   border: 0;
   padding: 0;
-  background-color: white;
+  background-color: var(--button-background-color);
   cursor: pointer;
 }
 
@@ -254,8 +285,8 @@ button.add-task-category {
   height: 1.3rem;
   border: 0;
   padding: 0;
-  border-radius: 50%;
   cursor: pointer;
+  background-color: var(--top-side-bar-background-color);
 }
 
 .task-category-icon-color:hover {
@@ -287,6 +318,11 @@ button.add-task-category {
   margin-left: 5px;
 }
 
+#selected,
+#selected > .task-category-icon-color {
+  background-color: var(--selected-option-background-color);
+}
+
 /* Task categories, added by the user */
 .task-category {
   display: flex;
@@ -304,16 +340,20 @@ button.add-task-category {
   padding: 5px;
 }
 
+.task-category-name {
+  color: var(--dashboard-font-color);
+}
+
 /* Main content, populated by other modules */
 #main-content {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
-  background-color: #f0eef1;
+  background-color: var(--main-content-background-color);
   overflow: auto;
 }
 
 .task-category-content {
-  background-color: #f0eef1;
+  background-color: var(--main-content-background-color);
 }
 
 .add-task-button-wrapper {
@@ -327,19 +367,19 @@ button.add-task-button {
   border-radius: 50px;
   padding: 10px;
   font-size: 1.5rem;
-  background-color: white;
-  color: black;
+  background-color: var(--button-background-color);
+  color: var(--button-font-color);
   border: 0;
 }
 
 button.add-task-button:hover {
-  color: white;
-  background-color: black;
+  color: var(--button-hover-font-color);
+  background-color: var(--button-hover-background-color);
 }
 
 button.add-task-button:active {
-  color: black;
-  background-color: white;
+  color: var(--button-active-font-color);
+  background-color: var(--button-active-background-color);
 }
 
 .task-cards {
@@ -354,12 +394,12 @@ button.add-task-button:active {
 .task-card-container {
   display: flex;
   gap: 10px;
-  color: black;
-  background-color: white;
+  color: var(--task-font-color);
+  background-color: var(--task-background-color);
   font-size: 2rem;
   border-radius: 10px;
   padding: 10px;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.16);
+  box-shadow: 2px 2px 2px var(--box-shadow-color);
   height: 104px;
   cursor: pointer;
 }
@@ -401,15 +441,11 @@ button.add-task-button:active {
 }
 
 .task-title {
-  /* display: inline-block; */
   display: -webkit-box;
-
   width: 240px; /* */
   height: 75px;
-  /* word-wrap: break-word; */
   overflow: hidden;
   text-overflow: ellipsis;
-  /* white-space: nowrap; */
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   text-align: center;
@@ -429,10 +465,11 @@ button.add-task-button:active {
   padding: 10px;
   margin: 25px 100px;
   border-style: solid;
-  border-color: rgb(195, 195, 195);
+  border-color: var(--today-late-task-border-color);
   border-width: 2px 2px 0 2px;
-  background-color: white;
-  box-shadow: 0 4px 2px rgba(0, 0, 0, 0.16);
+  background-color: var(--task-background-color);
+  box-shadow: 0 4px 2px var(--box-shadow-color);
+  color: var(--task-font-color);
 }
 
 .today-complete-icon,
