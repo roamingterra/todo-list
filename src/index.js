@@ -24,7 +24,8 @@ import {
 } from "./dom-manipulation.js";
 import {
   taskCategoryLibrary,
-  taskCategoryFactory,
+  todayLibrary,
+  lateLibrary,
   taskFactory,
   checkTaskCategoryLibraryFull,
   addNewTaskCategory,
@@ -33,22 +34,25 @@ import {
   findTaskCategoryIndexIsSelected,
   returnIndexTaskCategoryValue,
   moveTaskNewTaskCategory,
+  resetTaskCategoryAndTaskLocalStorage,
+  getTaskCategoriesLocalStorage,
+  getTaskLocalStorage,
   updateTaskIndicesOfTaskCategory,
-  todayLibrary,
-  lateLibrary,
+  updateTaskCategoryIndicesOfTasks,
   sortTasksToday,
   sortTasksLate,
   getDirectionOfWindowResize,
 } from "./logic.js";
 import "./style.css";
 
+// Build the dashboard in the DOM
 dashboard();
 
-// Create object for dummy task category then place in array
-const dummyTaskCategory = taskCategoryFactory("General", "#000000");
-taskCategoryLibrary.push(dummyTaskCategory);
+// Get all tasks and task categories from local storage and place them in the appropriate arrays
+getTaskCategoriesLocalStorage();
+getTaskLocalStorage();
 
-// Display task categories
+// Display task categories in the DOM
 displayTaskCategories();
 
 // Event listeners to control the flow of the retracting and expanding dashboard sidebar
@@ -75,7 +79,8 @@ container.addEventListener("click", (event) => {
 const plusIcon = document.querySelector(".plus-icon");
 plusIcon.addEventListener("click", () => {
   if (!checkTaskCategoryLibraryFull()) {
-    addNewTaskCategory();
+    addNewTaskCategory(taskCategoryLibrary.length);
+    resetTaskCategoryAndTaskLocalStorage();
     clearTaskCategories();
     displayTaskCategories();
     if (findTaskCategoryIndexIsSelected() !== undefined) {
@@ -97,6 +102,7 @@ allTaskCategories.forEach((taskCategory) => {
         event.target.value
       );
     }
+    resetTaskCategoryAndTaskLocalStorage();
   });
 });
 
@@ -110,6 +116,8 @@ allTaskCategories.forEach((taskCategory) => {
       }
 
       taskCategoryLibrary.splice(event.target.classList[1], 1);
+      updateTaskCategoryIndicesOfTasks();
+      resetTaskCategoryAndTaskLocalStorage();
       clearTaskCategories();
       displayTaskCategories();
 
@@ -161,7 +169,6 @@ window.addEventListener("click", (event) => {
 
       // Make new task object from user input using the constructor and push it to appropriate task category object
       taskCategoryIndex = returnIndexTaskCategoryValue(taskCategoryValue);
-      //   console.log(taskCategoryLibrary[taskCategoryIndex]);
 
       let taskIndex = 0;
       if (taskCategoryLibrary[taskCategoryIndex].getTasks().length !== 0) {
@@ -178,7 +185,7 @@ window.addEventListener("click", (event) => {
       );
 
       taskCategoryLibrary[taskCategoryIndex].setTask(newTask);
-
+      resetTaskCategoryAndTaskLocalStorage();
       removeTaskForm();
       removeTaskCategoryContentTaskCards();
       taskCategoryContentTaskCards(findTaskCategoryIndexIsSelected());
@@ -200,6 +207,7 @@ window.addEventListener("click", (event) => {
     const deleteTask = document.querySelector("#delete");
     deleteTask.addEventListener("click", () => {
       taskCategoryLibrary[taskCategoryIndex].removeTask(taskIndex);
+      resetTaskCategoryAndTaskLocalStorage();
       removeTaskForm();
       removeTaskCategoryContentTaskCards();
       taskCategoryContentTaskCards(findTaskCategoryIndexIsSelected());
@@ -254,6 +262,7 @@ window.addEventListener("click", (event) => {
         updateTaskIndicesOfTaskCategory(newTaskCategoryIndex);
       }
 
+      resetTaskCategoryAndTaskLocalStorage();
       removeTaskForm();
       removeTaskCategoryContentTaskCards();
       taskCategoryContentTaskCards(findTaskCategoryIndexIsSelected());
@@ -280,6 +289,7 @@ window.addEventListener("click", (event) => {
     );
 
     updateTaskIndicesOfTaskCategory(findTaskCategoryIndexIsSelected());
+    resetTaskCategoryAndTaskLocalStorage();
 
     // Show with a check mark that the task has been completed
     completeTask(taskIndex);
@@ -336,6 +346,7 @@ window.addEventListener("click", (event) => {
 
     // Remove task from today array
     todayLibrary.splice(taskIndexToday, 1);
+    resetTaskCategoryAndTaskLocalStorage();
 
     // Remove task only after task is shown to be complete for 500ms
     setTimeout(function () {
@@ -366,6 +377,7 @@ window.addEventListener("click", (event) => {
 
     // Remove task from late array
     lateLibrary.splice(taskIndexLate, 1);
+    resetTaskCategoryAndTaskLocalStorage();
 
     // Remove task only after task is shown to be complete for 500ms
     setTimeout(function () {

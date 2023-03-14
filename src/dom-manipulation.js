@@ -1,7 +1,6 @@
 // Imports
 import {
   taskCategoryLibrary,
-  taskCategoryLibraryStringified,
   formatDate,
   findTaskCategoryIndexIsSelected,
   todayLibrary,
@@ -18,19 +17,8 @@ import closeDark from "./images/close-dark.svg";
 import circleDark from "./images/circle-outline.svg";
 import checkMark from "./images/check-mark-icon.png";
 
-const taskCategoryLibraryParsed = JSON.parse(
-  localStorage.getItem("taskCategoryLibrary")
-);
-
 // dashboard function (for loading the side and top bars)
 function dashboard() {
-  // NOTE: A grid system is to be created with this function. The side and top bars will be populated with elements,
-  //       and the main section (column 2 and row 2) will be left as an html element that contains an image, which is
-  //       to be replaced and filled by the other functions
-  //       ie: today function, late function, and taskCategory function
-  // NOTE: This function will be called again when a taskCategory is either added or removed, because this needs to be
-  //       displayed in the side bar
-
   // declare elements
   const body = document.querySelector("body");
   const container = document.querySelector("#container");
@@ -453,7 +441,7 @@ function buildTaskForm(taskCategoryIndex, taskIndex) {
   closeImg.setAttribute("id", "close");
   closeImg.setAttribute("src", closeDark);
   closeImg.setAttribute("alt", "close form window icon");
-  form.setAttribute("action", "javascript:function();"); // TO BE SENT TO A LOGIC.JS FUNCTION
+  form.setAttribute("action", "javascript:function();");
   form.setAttribute("method", "post");
   form.setAttribute("id", "form");
   formColumn1.setAttribute("class", "form-column-1");
@@ -845,9 +833,6 @@ function lateContent() {
 
 // Highlight Today or Late selection function
 function highlightTodayOrLateSelection(selection) {
-  // const selectedTaskCategory = document.getElementsByClassName(
-  //     `task-category ${selectedElementClassIndex}`
-  //   );
   selection.style.backgroundColor = "#f0eef1";
 }
 

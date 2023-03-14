@@ -5,19 +5,28 @@ const {
   parseISO,
 } = require("date-fns");
 
+// Array that holds all task category objects
+const taskCategoryLibrary = [];
+
+// today array (contains all task objects that have dueDate of todays date)
+const todayLibrary = [];
+
+// late array (contains all task objects that have a dueDate earlier that todays date)
+const lateLibrary = [];
+
 // taskCategory factory function (creates task category objects, which will contain tasks)
-// properties: title (received from user form), color (received from user form), array of tasks
-// methods: getTitle, getColor, getTasks (get tasks from tasks array), setTitle, setColor, setTask (add task to tasks array),
-function taskCategoryFactory(title, color) {
+function taskCategoryFactory(title, color, index) {
   const tasksArray = [];
   let isSelected = false;
 
   const getTitle = () => title;
   const getColor = () => color;
+  const getIndex = () => index;
   const getTasks = () => tasksArray;
   const getIsSelected = () => isSelected;
   const setTitle = (newTitle) => (title = newTitle);
   const setColor = (newColor) => (color = newColor);
+  const setIndex = (newIndex) => (index = newIndex);
   const setTask = (newTask) => tasksArray.push(newTask);
   const setIsSelected = (booleanValue) => (isSelected = booleanValue);
   const removeTask = (taskIndex) => tasksArray.splice(taskIndex, 1);
@@ -25,10 +34,12 @@ function taskCategoryFactory(title, color) {
   return {
     getTitle,
     getColor,
+    getIndex,
     getTasks,
     getIsSelected,
     setTitle,
     setColor,
+    setIndex,
     setTask,
     setIsSelected,
     removeTask,
@@ -36,11 +47,6 @@ function taskCategoryFactory(title, color) {
 }
 
 // task factory function (creates tasks that the user creates, which will be placed in a taskCategory)
-// properties: title (received from user form), description (received from user form),
-//             category (received from user form), dueDate (received from user form),
-//             priority (received from user form)
-// methods: getTitle, getDescription, getCategory, getDueDate, getPriority
-//          setTitle, setDescription, setCategory, setDueDate, setPriority
 function taskFactory(
   title,
   description,
@@ -80,13 +86,6 @@ function taskFactory(
   };
 }
 
-// Array that holds all task category objects
-const taskCategoryLibrary = [];
-const taskCategoryLibraryStringified = localStorage.setItem(
-  "taskCategoryLibrary",
-  JSON.stringify(taskCategoryLibrary)
-);
-
 // Function to check if there are five task category objects in array
 function checkTaskCategoryLibraryFull() {
   if (taskCategoryLibrary.length === 5) return true;
@@ -94,8 +93,12 @@ function checkTaskCategoryLibraryFull() {
 }
 
 // Add new task category function
-function addNewTaskCategory() {
-  const dummyTaskCategory = taskCategoryFactory("Category", "#000000");
+function addNewTaskCategory(taskCategoryIndex) {
+  const dummyTaskCategory = taskCategoryFactory(
+    "Category",
+    "#000000",
+    taskCategoryIndex
+  );
   taskCategoryLibrary.push(dummyTaskCategory);
 }
 
@@ -146,6 +149,129 @@ function moveTaskNewTaskCategory(
   taskCategoryLibrary[taskCategoryIndex].removeTask(taskIndex);
 }
 
+// Function that iterates through all tasks and task categories and sends them to local storage
+function resetTaskCategoryAndTaskLocalStorage() {
+  localStorage.clear();
+  // Iterate through task category library
+  let newTaskIndex = -1;
+  for (let i = 0; i < taskCategoryLibrary.length; i++) {
+    // Create object of primitive elements from task category
+    const title = taskCategoryLibrary[i].getTitle();
+    const color = taskCategoryLibrary[i].getColor();
+    const taskCategoryLocalStorage = { title: title, color: color };
+    // Stringify object and send it to local storage
+    localStorage.setItem(
+      `taskCategory${i}`,
+      JSON.stringify(taskCategoryLocalStorage)
+    );
+    // Iterate through tasks in task category task array (if any)
+    for (let j = 0; j < taskCategoryLibrary[i].getTasks().length; j++) {
+      newTaskIndex++;
+      // Create object of primitive elements from task category
+      const title = taskCategoryLibrary[i].getTasks()[j].getTitle();
+      const description = taskCategoryLibrary[i].getTasks()[j].getDescription();
+      const category = taskCategoryLibrary[i].getTasks()[j].getCategory();
+      const dueDate = taskCategoryLibrary[i].getTasks()[j].getDueDate();
+      const priority = taskCategoryLibrary[i].getTasks()[j].getPriority();
+      const taskIndexStorage = taskCategoryLibrary[i]
+        .getTasks()
+        [j].getTaskIndex();
+      const taskLocalStorage = {
+        title: title,
+        description: description,
+        category: category,
+        dueDate: dueDate,
+        priority: priority,
+        taskIndex: taskIndexStorage,
+      };
+      // Stringify object and send it to local storage
+      localStorage.setItem(
+        `task${newTaskIndex}`,
+        JSON.stringify(taskLocalStorage)
+      );
+    }
+  }
+}
+
+// Local storage getter and object constructor task categories
+function getTaskCategoriesLocalStorage() {
+  const localStorageKeys = Object.keys(localStorage);
+
+  if (localStorageKeys.length === 0) {
+    return 0;
+  }
+
+  // Find out how many task categories are in local storage
+  let largestIndex = 0;
+  for (let i = 0; i < localStorageKeys.length; i++) {
+    const regEXP1 = /taskCategory[0-5]+/i;
+    const result1 = localStorageKeys[i].match(regEXP1);
+    if (result1 === null) continue;
+    const regExp2 = /[0-5]+/i;
+    const result2 = result1[0].match(regExp2);
+    if (result2[0] > largestIndex) {
+      largestIndex = result2[0];
+    }
+  }
+
+  for (let i = 0; i <= largestIndex; i++) {
+    // Get task category local storage object
+    const taskCategoryLocalStorage = JSON.parse(
+      localStorage.getItem(`taskCategory${i}`)
+    );
+
+    // Create task category object from task category retrieved local storage object
+    const taskCategory = taskCategoryFactory(
+      taskCategoryLocalStorage.title,
+      taskCategoryLocalStorage.color
+    );
+    // Place task category object in taskCategoryLibrary array
+    taskCategoryLibrary[i] = taskCategory;
+  }
+}
+
+// Local storage getter and object constructor of tasks
+function getTaskLocalStorage() {
+  const localStorageKeys = Object.keys(localStorage);
+
+  if (localStorage.getItem(`task${0}`) === null) {
+    return 0;
+  }
+
+  let largestIndex = 0;
+  for (let i = 0; i < localStorageKeys.length; i++) {
+    const regEXP1 = /task[0-9]+/i;
+    const result1 = localStorageKeys[i].match(regEXP1);
+    if (result1 === null) {
+      continue;
+    }
+    const regExp2 = /[0-9]+/i;
+    const result2 = result1[0].match(regExp2);
+    if (result2[0] > largestIndex) {
+      largestIndex = result2[0];
+    }
+  }
+
+  // Iterate through all of the tasks in local storage
+  for (let i = 0; i <= largestIndex; i++) {
+    // parse JSON string into object of primitive values
+    const taskLocalStorage = JSON.parse(localStorage.getItem(`task${i}`));
+    // create the task
+    const task = taskFactory(
+      taskLocalStorage.title,
+      taskLocalStorage.description,
+      taskLocalStorage.category,
+      taskLocalStorage.dueDate,
+      taskLocalStorage.priority,
+      taskLocalStorage.taskIndex
+    );
+    // Place task in the appropriate taskCategory task array
+    taskCategoryLibrary[taskLocalStorage.category].getTasks()[
+      taskLocalStorage.taskIndex
+    ] = task;
+  }
+}
+
 // update indices of tasks of a task category
 function updateTaskIndicesOfTaskCategory(taskCategoryIndex) {
   for (
@@ -154,6 +280,15 @@ function updateTaskIndicesOfTaskCategory(taskCategoryIndex) {
     i++
   ) {
     taskCategoryLibrary[taskCategoryIndex].getTasks()[i].setTaskIndex(i);
+  }
+}
+
+// Update task category indices of tasks
+function updateTaskCategoryIndicesOfTasks() {
+  for (let i = 0; i < taskCategoryLibrary.length; i++) {
+    for (let j = 0; j < taskCategoryLibrary[i].getTasks().length; j++) {
+      taskCategoryLibrary[i].getTasks()[j].setCategory(i);
+    }
   }
 }
 
@@ -191,15 +326,7 @@ function formatDate(date) {
   }
 }
 
-// today array (contains all task objects that have dueDate of todays date)
-const todayLibrary = [];
-
-// late array (contains all task objects that have a dueDate earlier that todays date)
-const lateLibrary = [];
-
 // Sort tasks into today array function (sends task object to appropriate arrays)
-// NOTE: Something to consider is that when a new day comes along, certain task objects will need to be automatically
-//       placed into either the today array, or the late array.
 function sortTasksToday() {
   // Clear todayLibrary array
   todayLibrary.length = 0;
@@ -225,8 +352,6 @@ function sortTasksToday() {
 }
 
 // Sort tasks into late array function (sends task object to appropriate arrays)
-// NOTE: Something to consider is that when a new day comes along, certain task objects will need to be automatically
-//       placed into either the today array, or the late array.
 function sortTasksLate() {
   // Clear lateLibrary array
   lateLibrary.length = 0;
@@ -284,8 +409,8 @@ const getDirectionOfWindowResize = (() => {
 
 export {
   taskCategoryLibrary,
-  taskCategoryLibraryStringified,
-  taskCategoryFactory,
+  todayLibrary,
+  lateLibrary,
   taskFactory,
   checkTaskCategoryLibraryFull,
   addNewTaskCategory,
@@ -294,10 +419,12 @@ export {
   findTaskCategoryIndexIsSelected,
   returnIndexTaskCategoryValue,
   moveTaskNewTaskCategory,
+  resetTaskCategoryAndTaskLocalStorage,
+  getTaskCategoriesLocalStorage,
+  getTaskLocalStorage,
   updateTaskIndicesOfTaskCategory,
+  updateTaskCategoryIndicesOfTasks,
   formatDate,
-  todayLibrary,
-  lateLibrary,
   sortTasksToday,
   sortTasksLate,
   getDirectionOfWindowResize,
