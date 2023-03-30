@@ -60,3 +60,11 @@ of these tasks depending on changes that the user makes. A better
 solution would be to link tasks to task categories through the name of
 the task category, but this would require me to not allow the same task
 category names multiple times. This could be a future potential.
+
+**_ March 30 2023 update _**
+Because I was having issues with local storage through my projects
+github pages url, I needed to look for a solution. I learned that the
+names of my localstorage keys have generic names and therefore may be
+colliding with keys used by other scripts or applications running on the
+same domain as my Github pages site. The unique prefix I am now using
+for my keys is "todoListApp".
