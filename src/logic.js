@@ -161,7 +161,7 @@ function resetTaskCategoryAndTaskLocalStorage() {
     const taskCategoryLocalStorage = { title: title, color: color };
     // Stringify object and send it to local storage
     localStorage.setItem(
-      `taskCategory${i}`,
+      `todoListAppTaskCategory${i}`,
       JSON.stringify(taskCategoryLocalStorage)
     );
     // Iterate through tasks in task category task array (if any)
@@ -186,7 +186,7 @@ function resetTaskCategoryAndTaskLocalStorage() {
       };
       // Stringify object and send it to local storage
       localStorage.setItem(
-        `task${newTaskIndex}`,
+        `todoListAppTask${newTaskIndex}`,
         JSON.stringify(taskLocalStorage)
       );
     }
@@ -195,7 +195,9 @@ function resetTaskCategoryAndTaskLocalStorage() {
 
 // Local storage getter and object constructor task categories
 function getTaskCategoriesLocalStorage() {
-  const localStorageKeys = Object.keys(localStorage);
+  const localStorageKeys = Object.keys(localStorage).filter((key) =>
+    key.startsWith("todoListApp")
+  );
 
   if (localStorageKeys.length === 0) {
     return 0;
@@ -204,7 +206,7 @@ function getTaskCategoriesLocalStorage() {
   // Find out how many task categories are in local storage
   let largestIndex = 0;
   for (let i = 0; i < localStorageKeys.length; i++) {
-    const regEXP1 = /taskCategory[0-5]+/i;
+    const regEXP1 = /todoListAppTaskCategory[0-5]+/i;
     const result1 = localStorageKeys[i].match(regEXP1);
     if (result1 === null) continue;
     const regExp2 = /[0-5]+/i;
@@ -217,7 +219,7 @@ function getTaskCategoriesLocalStorage() {
   for (let i = 0; i <= largestIndex; i++) {
     // Get task category local storage object
     const taskCategoryLocalStorage = JSON.parse(
-      localStorage.getItem(`taskCategory${i}`)
+      localStorage.getItem(`todoListAppTaskCategory${i}`)
     );
 
     // Create task category object from task category retrieved local storage object
@@ -232,9 +234,11 @@ function getTaskCategoriesLocalStorage() {
 
 // Local storage getter and object constructor of tasks
 function getTaskLocalStorage() {
-  const localStorageKeys = Object.keys(localStorage);
+  const localStorageKeys = Object.keys(localStorage).filter((key) =>
+    key.startsWith("todoListApp")
+  );
 
-  if (localStorage.getItem(`task${0}`) === null) {
+  if (localStorage.getItem(`todoListAppTask${0}`) === null) {
     return 0;
   }
 
@@ -255,7 +259,9 @@ function getTaskLocalStorage() {
   // Iterate through all of the tasks in local storage
   for (let i = 0; i <= largestIndex; i++) {
     // parse JSON string into object of primitive values
-    const taskLocalStorage = JSON.parse(localStorage.getItem(`task${i}`));
+    const taskLocalStorage = JSON.parse(
+      localStorage.getItem(`todoListAppTask${i}`)
+    );
     // create the task
     const task = taskFactory(
       taskLocalStorage.title,
